@@ -3,17 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 import "./index.scss";
 import "@app/utils/prototype";
-// import * as Alert from "@app/utils/swal";
-// import config from "@app/config";
 
 export interface IActionBarProps {
   disabled: boolean;
   onAction: string;
+  text?: string
 }
 
-const ActionBar: FC<IActionBarProps> = ({ disabled, onAction }) => {
+const ActionBar: FC<IActionBarProps> = ({ text, disabled, onAction }) => {
 
-  // useEffect(() => {}, []);
   const navigate = useNavigate();
 
   return (
@@ -23,11 +21,10 @@ const ActionBar: FC<IActionBarProps> = ({ disabled, onAction }) => {
           title="Back"
           disabled={disabled}
           onClick={() => {
-            // window.location.href = onAction;
             navigate(onAction);
           }}
         >
-          &lt; Back
+          {text || <span>&lt; Back</span>}
         </button>
       </div>
 

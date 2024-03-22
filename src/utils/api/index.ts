@@ -1,8 +1,7 @@
-import config from "../../config";
-import tval from "./../tval";
+import config from "@app/config";
+import tval from "@app/utils/tval";
 
 import http, { IPostIData, IRes } from "./../http";
-
 
 export const fetchProviderUrl = async (providerName: string): Promise<IRes> => {
   const token = localStorage.getItem("userToken");

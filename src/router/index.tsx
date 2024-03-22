@@ -1,12 +1,5 @@
-import React, { FC } from "react";
-
-// import store from "../store";
-// import { IAppProps } from "../App/interfaces";
-
-import {
-  createBrowserRouter, Navigate,
-  // Outlet, NavLink, redirect,
-} from "react-router-dom";
+import React from "react";
+import { createBrowserRouter } from "react-router-dom";
 
 import LayoutMain from "@app/layouts/Main";
 
@@ -30,9 +23,6 @@ const routes = [
       { path: "/*", element: (<NotFoundPage />) },
     ],
   },
-  // {
-  //   path: "/user", exact: true, element: (<Navigate to="/user/login" replace={true} />),
-  // },
 ];
 
 export default createBrowserRouter(routes);

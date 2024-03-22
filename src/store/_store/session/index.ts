@@ -2,11 +2,11 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { produce } from 'immer';
-import { ISession } from "../../types/interfaces/session";
+import { ISession } from "@app/store/types/interfaces/session";
 
-import { Address, EProtocol } from "../../../contracts";
-import { IChainInfo } from "../../../hooks/useSmart";
-import { ISCConfig } from "../../../config/interfaces";
+import { Address, EProtocol } from "@app/contracts";
+import { IChainInfo } from "@app/hooks/useSmart";
+import { ISCConfig } from "@app/config/interfaces";
 
 const initialState: ISession = {
   chainId: 421614,
@@ -112,7 +112,6 @@ const store = create(
     }),
     {
       name: 'persist-store-session',
-      // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
     }
   )
 );

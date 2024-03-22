@@ -1,32 +1,30 @@
-import React, { useEffect, FC, useState, useRef } from "react";
+import React, { FC, useRef } from "react";
 import { useAccount, useWriteContract } from "wagmi";
-import { getChainId, getChains } from '@wagmi/core'
+import { getChains } from '@wagmi/core'
+
+import "./index.scss"
 
 import { ICommonProps } from "../../interfaces";
-import { Address, EAbis, IContractItem, useReadSmartProps } from "@app/hooks/useSmart";
 
-// import config from "@app/config";
-import { ISCConfig } from "@app/config/interfaces";
 import crypto from "@app/utils/crypto";
 import * as Alert from "@app/utils/swal";
 import tval from "@app/utils/tval";
 import store from '@app/store';
-// import config from "@app/config";
+import wagmiConfig from "@app/providers/wagmi/config";
+import { ISmartContractParams } from "@app/contracts";
+import { getTxErrorMessage } from "@app/contracts/utils";
+
+import useSymbol from "@app/hooks/erc20/useSymbol";
+import { Address, EAbis, useReadSmartProps } from "@app/hooks/useSmart";
+import useAllowance from "@app/hooks/erc20/allowance";
+
 
 import AppRow from "@app/components/Layout/AppRow";
 import { InlineLoader } from "@app/components/common/app/InlineLoader";
 import ContinueButton from "@app/components/Layout/ContinueButton";
 import Symbol from "@app/components/common/app/Symbol";
 
-import { useContractConfig } from "@app/hooks/useContractConfig";
-import useAllowance from "@app/hooks/erc20/allowance";
-import useSymbol from "@app/hooks/erc20/useSymbol";
-
-import wagmiConfig from "@app/providers/wagmi/config";
 import { Chain } from "viem";
-import { ISmartContractParams } from "@app/contracts";
-import { getTxErrorMessage } from "@app/contracts/utils";
-
 
 const AllowedToDeposit: FC<ICommonProps> = ({
   chainInfo,
@@ -40,16 +38,11 @@ const AllowedToDeposit: FC<ICommonProps> = ({
   const setLoader = store.system((state) => (state.setLoader));
   const { writeContractAsync, writeContract } = useWriteContract();
   const { address, isConnecting, isDisconnected } = useAccount();
-  // const chainInfo: IChainInfo = store.session((state) => (state.getChainInfo()));
 
   const chains = getChains(wagmiConfig);
   const mChain = chains.find((chain: Chain) => (chain.id === chainInfo.chainId));
-  const contracts: IContractItem[] = useContractConfig(chainInfo).contracts;
-  const selectedContract: number = store.session((state) => (state.getSelectedContract()));
-  const contract: IContractItem = contracts[selectedContract];
   const blockExplorerUrl = mChain?.blockExplorers?.default?.url || "";
   const blockExplorerName = mChain?.blockExplorers?.default?.name || "";
-
 
   const symbolRes = useSymbol(chainInfo, EAbis.erc20);
   symbol = symbolRes.symbol;
@@ -111,13 +104,8 @@ const AllowedToDeposit: FC<ICommonProps> = ({
       setLoader("Please approve transaction on your mobile wallet");
 
       const params: any = propsRes.data as ISmartContractParams;
-      // const res = writeContract(params); // , {
-      // console.log(res);
-
       const mTxHash = await writeContractAsync(params);
       isConfirmed = true;
-
-      console.log({ mTxHash });
       setLoader("");
 
       if (blockExplorerUrl) {
@@ -146,10 +134,6 @@ const AllowedToDeposit: FC<ICommonProps> = ({
 
       <div className="pd-10">
         Allowed amount to deposit
-        {/*
-        <br />
-        {crypto.toShortAddress(address)}
-        */}
       </div>
 
       <div className="pd-10">

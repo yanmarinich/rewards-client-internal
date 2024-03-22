@@ -20,14 +20,6 @@ const getParams = (readFromStorage: boolean = false): IGetParams => {
   const source = readFromStorage ? lsData : window.location.pathname.split("/").slice(-2);
   const [userToken, providerName] = source;
   const { code, error_description } = getQueryParams()
-
-  // console.log("lsData", lsData);
-  // console.log("source", source);
-  // console.log("userToken", userToken);
-  // console.log("providerName", providerName);
-  // console.log("code", code);
-  // console.log("error_description", error_description);
-
   return {
     userToken,
     providerName,

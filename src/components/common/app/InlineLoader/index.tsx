@@ -4,7 +4,8 @@ import { Bars } from 'react-loading-icons'
 
 import "./index.scss";
 
-{/* <Audio />
+{/* 
+<Audio />
 <BallTriangle />
 <Bars />
 <Circles />
@@ -15,15 +16,16 @@ import "./index.scss";
 <Rings />
 <SpinningCircles />
 <TailSpin />
-<ThreeDots /> */}
+<ThreeDots />
+*/}
 
 export interface InlineLoaderProps extends IAppProps {
   title?: string;
 }
 
-export const InlineLoader: FC<InlineLoaderProps> = ({ children, title }: InlineLoaderProps) => {
+export const InlineLoader: FC<InlineLoaderProps> = ({ title }: InlineLoaderProps) => {
   return (
-    <div style={{ display: 'inline-block' }}>
+    <div className="loader-wrapper">
       <Bars className="loader" /> {title && title}
     </div>
   );

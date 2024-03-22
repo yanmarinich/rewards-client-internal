@@ -10,16 +10,6 @@ const arbitrum = initSmartContractEnvs('ARBITRUM', 'MAINNET');
 const fantom = initSmartContractEnvs('FANTOM', 'TESTNET');
 const fantomTestnet = initSmartContractEnvs('FANTOM', 'TESTNET');
 
-// console.json({ walletConnectProjectId });
-// console.json({ arbitrumTestnet });
-
-// console.json({
-//   arbitrumTestnet,
-//   arbitrum,
-//   fantomTestnet,
-//   fantom,
-// });
-
 export default {
   baseUrl,
   walletConnectProjectId,

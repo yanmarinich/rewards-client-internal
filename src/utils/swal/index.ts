@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import Swal, { SweetAlertIcon, SweetAlertResult } from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
@@ -69,8 +68,8 @@ export const confirm = async ({
     ...(html && { html }),
     icon: icon as SweetAlertIcon,
     showCancelButton: false,
-    confirmButtonText: yes, // "Save",
-    denyButtonText: no, // `Don't save`
+    confirmButtonText: yes,
+    denyButtonText: no,
     reverseButtons: true,
   }).then((result) => {
     return result.isConfirmed;
@@ -84,7 +83,6 @@ export const confirm = async ({
 
 export const onTransactionSuccess = async (url: string, blockchainName: string): Promise<boolean> => {
   return await confirm({
-    // title: "Success !",
     title: "Transaction completed successfully",
     html: `<a target="_blank" href="${url}"><b>View transaction on ${blockchainName}</b></a>`,
     icon: "success",
@@ -93,6 +91,31 @@ export const onTransactionSuccess = async (url: string, blockchainName: string):
   });
 }
 
+
+export interface IRow {
+  key: string;
+  value: string;
+}
+
+const createRow = (row: IRow): string => {
+  return `
+    <tr>
+      <td style="width: 50%;" class="text-right">${row.key}:</td>
+      <td class="text-left"><b>${row.value}</b></td>
+    </tr>
+  `;
+}
+
+export const createDialogTable = (title: string, rows: IRow[]) => {
+  return `
+    <h4>${title}</h4>
+    <table style="width: 100%;">
+      <tbody>
+        ${rows.map((r: IRow) => (createRow(r))).join("\n")}
+      </tbody>
+    </table>
+  `;
+}
 
 
 // Swal.fire({

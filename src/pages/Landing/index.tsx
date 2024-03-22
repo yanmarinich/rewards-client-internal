@@ -1,16 +1,11 @@
-import React, { useEffect, FC } from "react";
+import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { useChains, ChainIcon, ConnectKitButton, useChainIsSupported } from "connectkit";
-import { useAccount, useSwitchChain, useDisconnect } from "wagmi";
+import { useChains, ChainIcon } from "connectkit";
+import { useAccount, useSwitchChain } from "wagmi";
 
 import "./index.scss";
 import "@app/utils/prototype";
-import * as Alert from "@app/utils/swal";
-
 import { IAppProps } from "@app/interfaces/app.interfaces"
-
-import getParams from "@app/utils/params";
-import { fetchProviderUrl } from "@app/utils/api";
 
 import ActionBar from "@app/components/Layout/ActionBar";
 import ConnectButton from "@app/components/Layout/ConnectButton";
@@ -22,47 +17,15 @@ import AppRow from "@app/components/Layout/AppRow";
 const LandingPage: FC<IAppProps> = (props: IAppProps) => {
   const navigate = useNavigate();
 
-  // const params = getParams();
-  // const { userToken, providerName } = params;
-
-  // const chainIsSupported = useChainIsSupported(chainId);
   const { address, isConnecting, isDisconnected } = useAccount();
-  const { disconnect } = useDisconnect();
 
   const chains = useChains();
   const { chains: _chains, switchChain } = useSwitchChain()
-
   const _connected = (isConnecting || !isDisconnected) && address;
+
   const onContinue = (): void => {
     navigate('/select-protocol');
   }
-
-  if (_connected) {
-    // navigate('/select-protocol');
-    // return null;
-  }
-
-  // throw new Error("Something is wrong");
-
-
-  // useEffect(() => {
-  //   if (userToken && providerName) {
-  //     localStorage.setItem("userToken", userToken);
-  //     localStorage.setItem("providerName", providerName);
-  //     fetchProviderUrl(providerName)
-  //       .then((res) => {
-  //         console.log(res);
-  //         const { data } = res;
-  //         window.location.href = data.url;
-  //             return navigate( data.url );
-  //       });
-  //   }
-  // }, [userToken, providerName]);
-
-
-  useEffect(() => {
-    // disconnect();
-  }, [address, isConnecting, isDisconnected]);
 
   return (
     <>

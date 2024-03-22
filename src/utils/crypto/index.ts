@@ -1,5 +1,5 @@
 import * as ethers from "ethers";
-import tval from "../tval";
+import tval from "@app/utils/tval";
 
 const _module = 'crypto';
 

@@ -1,4 +1,4 @@
-import React, { useEffect, FC } from "react";
+import React, { FC } from "react";
 
 export interface IFooterShowChainInfoProps {
   chainId: number;

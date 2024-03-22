@@ -1,32 +1,26 @@
-import React, { useEffect, FC, useState, useRef } from "react";
+import React, { FC, useRef } from "react";
 import { useAccount, useWriteContract } from "wagmi";
-import { getChainId, getChains } from '@wagmi/core'
+import { getChains } from '@wagmi/core'
 import { Chain } from "viem";
 
 import { ICommonProps } from "../../interfaces";
-import { Address, EAbis, IContractItem, useReadSmartProps } from "@app/hooks/useSmart";
+import { Address, EAbis, useReadSmartProps } from "@app/hooks/useSmart";
 
-// import config from "@app/config";
-import { ISCConfig } from "@app/config/interfaces";
 import crypto from "@app/utils/crypto";
 import * as Alert from "@app/utils/swal";
 import tval from "@app/utils/tval";
 import store from '@app/store';
-// import config from "@app/config";
 
 import AppRow from "@app/components/Layout/AppRow";
-import { InlineLoader } from "@app/components/common/app/InlineLoader";
 import ContinueButton from "@app/components/Layout/ContinueButton";
 import Symbol from "@app/components/common/app/Symbol";
 
-import { useContractConfig } from "@app/hooks/useContractConfig";
-// import useAllowance from "@app/hooks/erc20/allowance";
 import useSymbol from "@app/hooks/erc20/useSymbol";
 import useHasAdminRole from "@app/hooks/accessControl/useHasAdminRole";
 
 import wagmiConfig from "@app/providers/wagmi/config";
 import { ISmartContractParams } from "@app/contracts";
-
+import { getTxErrorMessage } from "@app/contracts/utils";
 
 const Reward: FC<ICommonProps> = ({
   chainInfo,
@@ -39,17 +33,12 @@ const Reward: FC<ICommonProps> = ({
   const amountRef = useRef<HTMLInputElement>(null);
   const noteRef = useRef<HTMLInputElement>(null);
 
-  // const [isPending, setItPending] = useState<boolean>(false);
   const setLoader = store.system((state) => (state.setLoader));
   const { writeContractAsync, writeContract } = useWriteContract();
   const { address, isConnecting, isDisconnected } = useAccount();
-  // const chainInfo: IChainInfo = store.session((state) => (state.getChainInfo()));
 
   const chains = getChains(wagmiConfig);
   const mChain = chains.find((chain: Chain) => (chain.id === chainInfo.chainId));
-  const contracts: IContractItem[] = useContractConfig(chainInfo).contracts;
-  const selectedContract: number = store.session((state) => (state.getSelectedContract()));
-  const contract: IContractItem = contracts[selectedContract];
   const blockExplorerUrl = mChain?.blockExplorers?.default?.url || "";
   const blockExplorerName = mChain?.blockExplorers?.default?.name || "";
 
@@ -75,33 +64,22 @@ const Reward: FC<ICommonProps> = ({
       return Alert.toast.error("Amount can't be (0) zero");
 
     const note: string = (noteRef?.current?.value || "").trim();
-    // if (!tval.isString(note))
-    //   return Alert.toast.error("Reward note is not valid string");
 
     const amountBn = crypto.toWei(amountUInt, 18);
     const amount = amountBn.toString();
 
+    const table = Alert.createDialogTable(
+      "Are you sure you want create reward ? ",
+      [
+        { key: 'Amount', value: `${amountUInt}` },
+        { key: 'Address', value: crypto.toShortAddress(address as Address) },
+        { key: 'Note', value: (!!note.length ? note : 'Empty note') },
+      ]
+    );
+
     const q = await Alert.confirm({
       title: "Confirm Reward",
-      html: `
-        <h4>Are you sure you want create reward ? </h4>
-        <table style="width: 100%;">
-          <tbody>
-            <tr>
-              <td style="width: 50%;" class="text-right">Amount:</td>
-              <td class="text-left"><b>${amountUInt}</b></td>
-            </tr>
-            <tr>
-              <td style="width: 50%;" class="text-right">Address:</td>
-              <td class="text-left"><b>${crypto.toShortAddress(address as Address)}</b></td>
-            </tr>
-            <tr>
-              <td style="width: 50%;" class="text-right">Note:</td>
-              <td class="text-left"><b>${!!note.length ? note : 'Empty note'}</b></td>
-            </tr>
-          </tbody>
-        </table>
-      `
+      html: table
     });
 
     if (!q)
@@ -136,8 +114,6 @@ const Reward: FC<ICommonProps> = ({
 
       const mTxHash = await writeContractAsync(params);
       isConfirmed = true;
-
-      console.log({ mTxHash });
       setLoader("");
 
       if (blockExplorerUrl) {
@@ -152,10 +128,9 @@ const Reward: FC<ICommonProps> = ({
 
     } catch (e: any) {
       isConfirmed = true;
-      const msgs = e.message.split('\n');
-      // const message = msgs[0]
-      Alert.alert.error(`${msgs[0]} ${msgs[1] ?? ""}`);
-      console.log(msgs);
+      const message = getTxErrorMessage(e.message);
+      Alert.alert.error(message);
+      console.log(message);
       setLoader("");
     }
 
@@ -167,19 +142,7 @@ const Reward: FC<ICommonProps> = ({
 
       <div className="pd-10">
         Reward <Symbol symbol={symbol} /> Token Holder
-        {/*
-        <br />
-        {crypto.toShortAddress(address)}
-        */}
       </div>
-
-      {/*
-      <div className="pd-10">
-        {!success && (message)}
-        {isPending && (<InlineLoader title="Updating..." />)}
-        {success && (<Symbol symbol={symbol} value={allowance} />)}
-      </div>
-      */}
 
       <div className="input-main-wrapper">
         <div className="input-main-lable">Destination Addreess</div>
@@ -188,7 +151,7 @@ const Reward: FC<ICommonProps> = ({
           type="text"
           className="input-main"
           placeholder="Destionation Address"
-          defaultValue={"0x417fff1315774037da11ed348e82A3a6912875B8"}
+          // defaultValue={"0x417fff1315774037da11ed348e82A3a6912875B8"}
           ref={addressRef}
         />
       </div>
@@ -200,7 +163,7 @@ const Reward: FC<ICommonProps> = ({
           type="text"
           className="input-main"
           placeholder="Destionation Address"
-          defaultValue={"0.25"}
+          // defaultValue={"0.25"}
           ref={amountRef}
         />
       </div>
@@ -212,14 +175,18 @@ const Reward: FC<ICommonProps> = ({
           type="text"
           className="input-main"
           placeholder="Reward Note"
-          defaultValue={""}
+          // defaultValue={""}
           ref={noteRef}
         />
       </div>
 
 
       <div className="pd-10">
-        {message || !hasRole ? <b className="red">{message || "You are not in the Admin group"}</b> : <i>&nbsp;</i>}
+        {
+          (message || !hasRole)
+            ? <b className="red">{message || "You are not in the Admin group"}</b>
+            : <i>&nbsp;</i>
+        }
       </div>
 
       <div className="pd-10">

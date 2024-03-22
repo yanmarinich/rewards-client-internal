@@ -1,12 +1,11 @@
 import { useReadContract, useWriteContract } from 'wagmi'
-import { type UseReadContractReturnType } from 'wagmi'
-// import { type UseReadContractParameters } from 'wagmi'
+// import { type UseReadContractReturnType } from 'wagmi'
+
 import "@app/utils/prototype";
 
 import tval from "@app/utils/tval";
 import config from "@app/config";
-
-import wagmiConfig, { ids } from "@app/providers/wagmi/config";
+import { ids } from "@app/providers/wagmi/config";
 
 export { EAbis, EProtocol, type Address } from '@app/contracts';
 
@@ -81,10 +80,6 @@ export const useReadSmartProps = (
   { address, account, functionName, args }: IUseSmartSmartProps
 ): IGetReadSmartRes => {
 
-  // console.json({
-  //   useSmart: { protocol, abiName }
-  // });
-
   if (!(protocol in EProtocol))
     return res(false, `Not supported: (protocol: ${protocol})`);
 
@@ -109,16 +104,9 @@ export const useReadSmartProps = (
   if (tval.isUndefined(abi))
     return res(false, `#abi: ${abiName}, not found`);
 
-  // console.json({
-  //   address, //  '0x6b175474e89094c44da98b954eedeac495271d0f',
-  //   functionName,
-  //   args,
-  //   account,
-  // });
-
   const params: ISmartContractParams = {
     abi,
-    address, //  '0x6b175474e89094c44da98b954eedeac495271d0f',
+    address,
     functionName,
     args,
     account,
@@ -151,10 +139,6 @@ export const getWriteSmartProps = (
   { address, account, functionName, args }: IUseSmartSmartProps
 ): IGetWriteSmartRes => {
 
-  // console.json({
-  //   useSmart: { protocol, abiName }
-  // });
-
   if (!(protocol in EProtocol))
     return res(false, `Not supported: (protocol: ${protocol})`);
 
@@ -179,16 +163,9 @@ export const getWriteSmartProps = (
   if (tval.isUndefined(abi))
     return res(false, `#abi: ${abiName}, not found`);
 
-  // console.json({
-  //   address, //  '0x6b175474e89094c44da98b954eedeac495271d0f',
-  //   functionName,
-  //   args,
-  //   account,
-  // });
-
   const params: ISmartContractParams = {
     abi,
-    address, //  '0x6b175474e89094c44da98b954eedeac495271d0f',
+    address,
     functionName,
     args,
     account,

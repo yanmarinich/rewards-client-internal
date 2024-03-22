@@ -1,25 +1,12 @@
-import React, { useEffect } from "react";
+import React, { FC, useEffect } from "react";
 
-import { ConnectKitButton } from "connectkit";
-// import { useChains, ChainIcon, useChainIsSupported } from "connectkit";
-// import { useAccount, useSwitchChain, useDisconnect } from "wagmi";
-
-import "./index.scss";
 import "@app/utils/prototype";
-
+import { ConnectKitButton } from "connectkit";
 import crypto from "@app/utils/crypto";
 
-// import * as Alert from "@app/utils/swal";
-// import config from "@app/config";
-// import store from '@app/store';
+import "./index.scss";
 
-const ConnectButton = () => {
-
-  // const setLoader = store.system((state) => (state.setLoader));
-  // const { address, isConnecting, isDisconnected } = useAccount();
-  // const { disconnect } = useDisconnect();
-  // const isConnected = ((isConnecting || !isDisconnected) && address);
-
+const ConnectButton: FC = () => {
 
   return (
     <ConnectKitButton.Custom>

@@ -1,34 +1,26 @@
-import React, { useEffect, FC, useState, useRef } from "react";
+import React, { FC, useRef } from "react";
 import { useAccount, useWriteContract } from "wagmi";
 import { Chain } from "wagmi/chains";
-import { getChainId, getChains } from '@wagmi/core'
+import { getChains } from '@wagmi/core'
 
+import "./index.scss";
 import { ICommonProps } from "../../interfaces";
-import {
-  Address,
-  getWriteSmartProps,
-  IContractItem,
-  // useReadSmart, 
-  // useReadSmartProps, 
-  // IChainInfo,
-} from "@app/hooks/useSmart";
-
+import { Address, getWriteSmartProps, IContractItem } from "@app/hooks/useSmart";
 import wagmiConfig, { ids } from "@app/providers/wagmi/config";
+import { getTxErrorMessage } from "@app/contracts/utils";
 
 import * as Alert from "@app/utils/swal";
 import tval from "@app/utils/tval";
-
 import store from '@app/store';
 import crypto from "@app/utils/crypto";
-import AppRow from "@app/components/Layout/AppRow";
 import { ISCConfig } from "@app/config/interfaces";
-
-import ContinueButton from "@app/components/Layout/ContinueButton";
 import { EAbis, ISmartContractParams } from "@app/contracts";
+
 import useBalanceOf from "@app/hooks/erc20/useBalanceOf";
 import { useContractConfig } from "@app/hooks/useContractConfig";
-import { getTxErrorMessage } from "@app/contracts/utils";
-// import config from "@app/config";
+
+import AppRow from "@app/components/Layout/AppRow";
+import ContinueButton from "@app/components/Layout/ContinueButton";
 
 const IncreaseAllowance: FC<ICommonProps> = ({
   chainInfo, abiName, symbol = '', onUpdateRequired
@@ -39,15 +31,11 @@ const IncreaseAllowance: FC<ICommonProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { address, isConnecting, isDisconnected } = useAccount();
-
   const selectedContract: number = store.session((state) => (state.getSelectedContract()));
   const cfg: ISCConfig = store.session((state) => (state.getSmartConfig()));
-
   const contracts: IContractItem[] = useContractConfig(chainInfo).contracts;
-
   const chains = getChains(wagmiConfig);
   const mChain = chains.find((chain: Chain) => (chain.id === chainInfo.chainId));
-
   const blockExplorerUrl = mChain?.blockExplorers?.default?.url || "";
   const blockExplorerName = mChain?.blockExplorers?.default?.name || "";
 
@@ -58,13 +46,7 @@ const IncreaseAllowance: FC<ICommonProps> = ({
   );
 
   const {
-    // data: txHash,
-    // error: allowanceError,
-    // status: allowanceStatus,
-    // isError: isAllowanceError,
-    // isSuccess: isAllowanceSuccess,
-    // isPending: isAllowancePending,
-    writeContract,
+    // writeContract,
     writeContractAsync,
   } = useWriteContract();
 
@@ -142,7 +124,6 @@ const IncreaseAllowance: FC<ICommonProps> = ({
         <br />
         {contracts[selectedContract].display}
         <br />
-        {/* {crypto.toShortAddress(cfg.proxy.address)} */}
         {crypto.toShortAddress(cfg.proxy.address)}
       </div>
 

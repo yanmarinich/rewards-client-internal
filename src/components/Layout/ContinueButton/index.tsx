@@ -1,8 +1,7 @@
-import React, { useEffect, FC } from "react";
+import React, { FC } from "react";
 
 import tval from "@app/utils/tval";
 import { IAppProps } from "@app/interfaces/app.interfaces"
-
 import "./index.scss";
 
 export interface IContinueButton extends IAppProps {
@@ -16,8 +15,6 @@ const ContinueButton: FC<IContinueButton> = ({
   text = "Contiue",
   disabled = false
 }: IContinueButton) => {
-
-  // useEffect(() => {}, []);
 
   return (
     <button

@@ -1,6 +1,9 @@
-import { Succeed } from "aws-cdk-lib/aws-stepfunctions";
-import config from "../../config";
+// import config from "@app/config";
+import tval from "@app/utils/tval";
 
+export interface IHeaders {
+  [key: string]: string
+}
 export interface IPostIData {
   [key: string]: any
 }
@@ -32,13 +35,15 @@ const getRequest = async (url: string): Promise<IRes> => {
   }
 };
 
-const postRequest = async (url: string, data: IPostIData): Promise<IRes> => {
+const postRequest = async (url: string, data: IPostIData, headers?: IHeaders): Promise<IRes> => {
 
   try {
+    headers = tval.getObject(headers, {});
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
+        ...headers,
       },
       body: JSON.stringify(data),
     });

@@ -1,7 +1,5 @@
 
 import { useReadContract } from "wagmi";
-
-import config from "@app/config";
 import store from '@app/store';
 import crypto from "@app/utils/crypto";
 

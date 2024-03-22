@@ -1,5 +1,4 @@
-import React, { useEffect, FC, useState } from "react";
-
+import React, { FC } from "react";
 import { Outlet } from "react-router-dom";
 
 import "./index.scss";
@@ -15,7 +14,6 @@ const LayoutMain: FC<IAppProps> = ({ children }: IAppProps) => {
       <TopBar />
       <div>
         <Outlet />
-        {/* {children} */}
       </div>
     </>
   );

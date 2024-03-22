@@ -1,13 +1,9 @@
-import user from "./_store/user";
-import system from "./_store/system";
-import session from "./_store/session";
-import api from "./_store/api";
+import system from "@app/store/_store/system";
+import session from "@app/store/_store/session";
 
 const stores = {
-  user,
   system,
   session,
-  api,
 };
 
 export default stores;

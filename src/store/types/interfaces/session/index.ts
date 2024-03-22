@@ -1,9 +1,9 @@
-import { ISCConfig } from "../../../../config/interfaces";
+import { ISCConfig } from "@app/config/interfaces";
 import {
-  EAbis,
-  Address,
+  // EAbis,
+  // Address,
   EProtocol,
-} from "../../../../hooks/useSmart";
+} from "@app/hooks/useSmart";
 
 export interface ISession {
   chainId: number;

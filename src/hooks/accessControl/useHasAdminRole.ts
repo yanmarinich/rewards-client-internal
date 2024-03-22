@@ -1,16 +1,11 @@
 
 import { useReadContract } from "wagmi";
-
-import config from "@app/config";
-import store from '@app/store';
-import crypto from "@app/utils/crypto";
 import tval from "@app/utils/tval";
 
 import {
   Address, EAbis, IBasicReadContractRes,
   IChainInfo, useReadSmartProps,
 } from "./../useSmart";
-import { ISCConfig } from "@app/config/interfaces";
 import { EAccessControlRole } from "@app/contracts";
 
 export interface IUseAllowanceRes extends IBasicReadContractRes {
@@ -20,8 +15,6 @@ export interface IUseAllowanceRes extends IBasicReadContractRes {
 const useHasAdminRole = (chainInfo: IChainInfo, abiName: EAbis, address: Address): IUseAllowanceRes => {
 
   try {
-
-    // const cfg: ISCConfig = store.session((state) => (state.getSmartConfig()));
 
     const propsRes = useReadSmartProps(chainInfo.protocolName, abiName, {
       functionName: 'hasRole',

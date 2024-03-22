@@ -4,13 +4,12 @@ import { getDefaultConfig } from 'connectkit';
 import config from "@app/config";
 
 import {
-  // mainnet, 
   arbitrum,
   fantom,
   fantomTestnet,
-  // polygon, 
-  // polygonMumbai,
-  Chain,
+  polygon,
+  polygonMumbai,
+  // Chain,
 } from "wagmi/chains";
 
 import arbitrumTestnet from "./custom-protocols/arbitrum-testnet";
@@ -32,13 +31,15 @@ const wagmiConfig: Config = createConfig(
       fantomTestnet,
       fantom,
       // polygon,
-      // mainnet,
+      // polygonMumbai,
     ],
     transports: {
       [arbitrumTestnet.id]: http(arbitrumTestnet.rpcUrls.default.http[0]),
       [arbitrum.id]: http(arbitrum.rpcUrls.default.http[0]),
       [fantomTestnet.id]: http(fantomTestnet.rpcUrls.default.http[0]),
       [fantom.id]: http(fantom.rpcUrls.default.http[0]),
+      // [polygon.id]: http(polygon.rpcUrls.default.http[0]),
+      // [polygonMumbai.id]: http(polygonMumbai.rpcUrls.default.http[0]),
     },
     appName: config.appName,
     walletConnectProjectId: config.walletConnectProjectId,

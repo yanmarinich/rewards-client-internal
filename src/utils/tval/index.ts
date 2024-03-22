@@ -170,7 +170,7 @@ export class TVal {
       return toObject ? JSON.parse(process.env[key] || "{}") : process.env[key];
     } catch (e: any) {
       console.error(
-        `#TVal:getEnv: ${e.message}  key: [${key}], toObject: [${toObject}]`
+        `#tval:getEnv: ${e.message}  key: [${key}], toObject: [${toObject}]`
       );
       return '';
     }
@@ -181,7 +181,7 @@ export class TVal {
       return JSON.parse(process.env[key] || "{}");
     } catch (e: any) {
       console.error(
-        `#TVal:getEnvAsObject: ${e.message} key: [${key}]`
+        `#tval:getEnvAsObject: ${e.message} key: [${key}]`
       );
       return {};
     }
@@ -191,7 +191,7 @@ export class TVal {
     try {
       return JSON.parse(process.env[key] || "{}");
     } catch (e: any) {
-      console.error(`#TVal:getEnvOnceAsObject: ${e.message} key: [${key}]`);
+      console.error(`#tval:getEnvOnceAsObject: ${e.message} key: [${key}]`);
       return {};
     }
   }
@@ -201,7 +201,7 @@ export class TVal {
       if (!this.isString(process.env[key])) return '';
       return process.env[key] || "";
     } catch (e: any) {
-      console.error(`#TVal:getEnvOnce: ${e.message} key: [${key}]`);
+      console.error(`#tval:getEnvOnce: ${e.message} key: [${key}]`);
       return "";
     }
   }
@@ -211,7 +211,7 @@ export class TVal {
       if (!this.isString(process.env[key])) return false;
       return this.getBoolFromValue(process.env[key]);
     } catch (e: any) {
-      console.error(`#TVal:getEnvAsBool: ${e.message}  key: [${key}]`);
+      console.error(`#tval:getEnvAsBool: ${e.message}  key: [${key}]`);
       return false;
     }
   }
@@ -221,7 +221,7 @@ export class TVal {
       if (!this.isString(process.env[key])) return 0;
       return this.getNumber(process.env[key], { floor: true, abs: false });
     } catch (e: any) {
-      console.error(`#TVal:getEnvAsInt: ${e.message}  key: [${key}]`);
+      console.error(`#tval:getEnvAsInt: ${e.message}  key: [${key}]`);
       return 0;
     }
   }
@@ -231,7 +231,7 @@ export class TVal {
       if (!this.isString(process.env[key])) return 0;
       return this.getNumber(process.env[key], { floor: false, abs: false });
     } catch (e: any) {
-      console.error(`#TVal:getEnvAsFloat: ${e.message}  key: [${key}]`);
+      console.error(`#tval:getEnvAsFloat: ${e.message}  key: [${key}]`);
       return 0;
     }
   }
@@ -256,7 +256,7 @@ export class TVal {
       return "";
 
     } catch (e: any) {
-      console.error(`#TVal:getEnvAs:(${as}): ${e.message}  key: [${key}]`);
+      console.error(`#tval:getEnvAs:(${as}): ${e.message}  key: [${key}]`);
       return false;
     }
   }

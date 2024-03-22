@@ -1,28 +1,17 @@
 import React, { useEffect, FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useChains, ChainIcon, ConnectKitButton, useChainIsSupported } from "connectkit";
-import { useAccount, useSwitchChain, useDisconnect } from "wagmi";
-import { getChainId } from '@wagmi/core'
-
-import "./index.scss";
+import { useChains, ChainIcon } from "connectkit";
+import { useSwitchChain } from "wagmi";
 
 import "@app/utils/prototype";
+import "./index.scss";
+
+import { IAppProps } from "@app/interfaces/app.interfaces";
 import * as Alert from "@app/utils/swal";
-
-import { ISCConfig } from "@app/config/interfaces";
-
-import { IRes } from "@app/utils/http";
 import tval from "@app/utils/tval";
-import config from "@app/config";
-import crypto from "@app/utils/crypto";
-import wagmiConfig, { ids } from "@app/providers/wagmi/config";
-
 import store from '@app/store';
 
 import {
-  useReadSmart,
-  EAbis,
-  Address,
   getProtocolNameByChainId,
   EProtocol,
   isSupportedProtocol,
@@ -35,12 +24,8 @@ import ActionBar from "@app/components/Layout/ActionBar";
 import AppRoot from "@app/components/Layout/AppRoot";
 import AppRowTitle from "@app/components/Layout/AppRowTitle";
 import AppRow from "@app/components/Layout/AppRow";
-import ConnectButton from "@app/components/Layout/ConnectButton";
 import ContinueButton from "@app/components/Layout/ContinueButton";
-
 import FooterShowChainInfo from "@app/components/common/FooterShowChainInfo";
-
-import { IAppProps } from "@app/interfaces/app.interfaces";
 
 const SelectProtocol: FC<IAppProps> = (props: IAppProps) => {
 
@@ -51,27 +36,11 @@ const SelectProtocol: FC<IAppProps> = (props: IAppProps) => {
 
   const chainInfo: IChainInfo = store.session((state) => (state.getChainInfo()));
   const setChainInfo = store.session((state) => (state.setChainInfo));
-
-  // const chainIsSupported = useChainIsSupported(chainId);
-  const { address, isConnecting, isDisconnected } = useAccount();
-
   const chains = useChains();
   const { chains: _chains, switchChain } = useSwitchChain()
-
-  // const balanceOfRes = useReadSmart(chainInfo.protocolName, EAbis.erc20, {
-  //   functionName: 'balanceOf',
-  //   args: [address as Address],
-  // });
-
   const [isPrtocolSelected, setPrtocolSelected] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [connected, setConnected] = useState<boolean>(false);
 
   const selectProtocol = (chainId: number) => {
-
-    // const chainIsSupported = useChainIsSupported(chainId);
-    // if (!chainIsSupported)
-    //   Alert.toast.error(`Unsupported chain selected: (chain-id: ${chainId})`);
 
     if (chainId === chainInfo.chainId) {
       Alert.toast.success(`Selected Protocol: ${chainInfo.protocolName}`);
@@ -99,12 +68,7 @@ const SelectProtocol: FC<IAppProps> = (props: IAppProps) => {
       return;
     }
 
-    setChainInfo({
-      chainId,
-      protocolName,
-      isInited,
-    });
-
+    setChainInfo({ chainId, protocolName, isInited });
     switchChain({ chainId });
     Alert.toast.success(`Selected Protocol: ${protocolName}`);
     setLoader("");
@@ -114,25 +78,8 @@ const SelectProtocol: FC<IAppProps> = (props: IAppProps) => {
     if (!isPrtocolSelected) {
       return Alert.toast.success(`Please selected protocol`);
     }
-    console.log(`redirect: /select-contract`);
     return navigate('/select-contract');
   }
-
-  useEffect(() => {
-    const chainId = getChainId(wagmiConfig);
-    const protocolName = getProtocolNameByChainId(chainId);
-
-    const isInited = (!!chainId && !!protocolName);
-    if (isInited) {
-      // console.log({ chainId, protocolName });
-      // session.chainInfo.set({
-      //   chainId,
-      //   protocolName,
-      //   isInited,
-      // });
-    }
-
-  }, [chainInfo.chainId, chainInfo.protocolName,]);
 
   useEffect(() => {
     if (chainInfo.isInited) {

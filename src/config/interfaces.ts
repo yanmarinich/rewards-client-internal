@@ -1,15 +1,18 @@
+import { Address } from "@app/contracts";
+
+
 export interface ISCConfig {
   proxy: {
-    address: `0x${string}`,
+    address: Address,
   },
   impl: {
-    address: `0x${string}`,
+    address: Address,
   },
   erc20: {
-    address: `0x${string}`,
+    address: Address,
   },
   accessControl: {
-    address: `0x${string}`,
+    address: Address,
   },
   isInited: boolean;
 }
