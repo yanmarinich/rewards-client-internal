@@ -27,6 +27,7 @@ import ContinueButton from "@app/components/Layout/ContinueButton";
 import { EAbis, ISmartContractParams } from "@app/contracts";
 import useBalanceOf from "@app/hooks/erc20/useBalanceOf";
 import { useContractConfig } from "@app/hooks/useContractConfig";
+import { getTxErrorMessage } from "@app/contracts/utils";
 // import config from "@app/config";
 
 const IncreaseAllowance: FC<ICommonProps> = ({
@@ -100,12 +101,19 @@ const IncreaseAllowance: FC<ICommonProps> = ({
       return;
     }
 
+    let isConfirmed = false;
     try {
+      setTimeout(() => {
+        if (!isConfirmed)
+          setLoader("");
+        Alert.alert.error("Failed: Transaction confirmation timeout . Please try again");
+      }, (60 * 1000));
 
       setLoader("Please approve transaction on your mobile wallet");
 
       const params: any = propsRes.data as ISmartContractParams;
       const mTxHash = await writeContractAsync(params);
+      isConfirmed = true;
       setLoader("");
 
       if (blockExplorerUrl) {
@@ -119,8 +127,10 @@ const IncreaseAllowance: FC<ICommonProps> = ({
         onUpdateRequired();
 
     } catch (e: any) {
-      const message = e.message.split('\n')[0]
+      isConfirmed = true;
+      const message = getTxErrorMessage(e.message);
       Alert.alert.error(message);
+      console.log(message);
       setLoader("");
     }
   }

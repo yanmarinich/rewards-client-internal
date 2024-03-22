@@ -47,7 +47,7 @@ import Balance from "../Token/Balance";
 
 import { useContractConfig } from "@app/hooks/useContractConfig";
 
-const ContractReward: FC<IAppProps> = (props: IAppProps) => {
+const RewardContractUser: FC<IAppProps> = (props: IAppProps) => {
 
   const [stateId, setStateId] = useState<number>(0);
 
@@ -115,4 +115,4 @@ const ContractReward: FC<IAppProps> = (props: IAppProps) => {
   );
 };
 
-export default ContractReward;
+export default RewardContractUser;

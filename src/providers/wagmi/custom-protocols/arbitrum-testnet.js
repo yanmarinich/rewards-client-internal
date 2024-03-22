@@ -12,8 +12,8 @@ const arbitrumTestnet = /*#__PURE__*/ defineChain({
     default: {
       http: [
         'https://public.stackup.sh/api/v1/node/arbitrum-sepolia',
-        'https://sepolia-rollup.arbitrum.io/rpc',
-        'https://arbitrum-sepolia.blockpi.network/v1/rpc/public ',
+        // 'https://sepolia-rollup.arbitrum.io/rpc',
+        // 'https://arbitrum-sepolia.blockpi.network/v1/rpc/public ',
       ],
     },
   },
@@ -24,12 +24,12 @@ const arbitrumTestnet = /*#__PURE__*/ defineChain({
       apiUrl: 'https://api-sepolia.arbiscan.io/api',
     },
   },
-  contracts: {
-    multicall3: {
-      address: '0xca11bde05977b3631167028862be2a173976ca11',
-      blockCreated: 81930,
-    },
-  },
+  // contracts: {
+  //   multicall3: {
+  //     address: '0xca11bde05977b3631167028862be2a173976ca11',
+  //     blockCreated: 81930,
+  //   },
+  // },
   testnet: true,
 });
 

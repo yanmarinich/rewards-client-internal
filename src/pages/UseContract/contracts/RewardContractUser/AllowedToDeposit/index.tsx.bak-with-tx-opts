@@ -1,16 +1,12 @@
 import React, { useEffect, FC, useState, useRef } from "react";
+import { useAccount, useWriteContract } from "wagmi";
 import { getChainId, getChains } from '@wagmi/core'
-import { Chain } from "viem";
 
 import { ICommonProps } from "../../interfaces";
 import { Address, EAbis, IContractItem, useReadSmartProps } from "@app/hooks/useSmart";
-import { useAccount, useWriteContract } from "wagmi";
 
-import wagmiConfig, { ids } from "@app/providers/wagmi/config";
-
+// import config from "@app/config";
 import { ISCConfig } from "@app/config/interfaces";
-import { ISmartContractParams } from "@app/contracts";
-
 import crypto from "@app/utils/crypto";
 import * as Alert from "@app/utils/swal";
 import tval from "@app/utils/tval";
@@ -19,31 +15,31 @@ import store from '@app/store';
 
 import AppRow from "@app/components/Layout/AppRow";
 import { InlineLoader } from "@app/components/common/app/InlineLoader";
+import ContinueButton from "@app/components/Layout/ContinueButton";
 import Symbol from "@app/components/common/app/Symbol";
 
-// import useAllowance from "@app/hooks/erc20/allowance";
+import { useContractConfig } from "@app/hooks/useContractConfig";
+import useAllowance from "@app/hooks/erc20/allowance";
 import useSymbol from "@app/hooks/erc20/useSymbol";
 
-import useAllowedToWithdraw from "@app/hooks/proxy/useAllowedToWithdraw";
-import ContinueButton from "@app/components/Layout/ContinueButton";
-import { useContractConfig } from "@app/hooks/useContractConfig";
+import wagmiConfig from "@app/providers/wagmi/config";
+import { Chain } from "viem";
+import { ISmartContractParams } from "@app/contracts";
 
 
-const AllowedToWithdraw: FC<ICommonProps> = ({
+const AllowedToDeposit: FC<ICommonProps> = ({
   chainInfo,
   abiName,
   symbol = '',
   onUpdateRequired
 }) => {
 
-  const setLoader = store.system((state) => (state.setLoader));
-
-  const { writeContractAsync, writeContract } = useWriteContract();
-
-  // const chainInfo: IChainInfo = store.session((state) => (state.getChainInfo()));
-  const { address, isConnecting, isDisconnected } = useAccount();
-
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const setLoader = store.system((state) => (state.setLoader));
+  const { writeContractAsync, writeContract } = useWriteContract();
+  const { address, isConnecting, isDisconnected } = useAccount();
+  // const chainInfo: IChainInfo = store.session((state) => (state.getChainInfo()));
 
   const chains = getChains(wagmiConfig);
   const mChain = chains.find((chain: Chain) => (chain.id === chainInfo.chainId));
@@ -53,21 +49,21 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
   const blockExplorerUrl = mChain?.blockExplorers?.default?.url || "";
   const blockExplorerName = mChain?.blockExplorers?.default?.name || "";
 
-  // abiName = EAbis.erc20; // USE ERC20
 
   const symbolRes = useSymbol(chainInfo, EAbis.erc20);
   symbol = symbolRes.symbol;
 
-  const { success, message, allowed, isPending } = useAllowedToWithdraw(
+  const { success, message, allowance, isPending } = useAllowance(
     chainInfo,
-    abiName,
+    EAbis.erc20,
     address as Address
   );
+
 
   const setMax = () => {
     const input = inputRef?.current;
     if (input)
-      input.value = allowed.toString();
+      input.value = allowance.toString();
   }
 
   const onContinue = async () => {
@@ -77,22 +73,22 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
       return Alert.toast.error("Amount can't be (0) zero");
     }
 
-    if (amountUInt > allowed)
-      return Alert.toast.error(`Requested amount exceeds available: ${allowed}`);
+    if (amountUInt > allowance)
+      return Alert.toast.error(`Requested amount exceeds available: ${allowance}`);
 
     const amountBn = crypto.toWei(amountUInt, 18);
     const amount = amountBn.toString();
 
     const q = await Alert.confirm({
-      title: "Withdraw",
-      text: `Are you sure you want withdraw ${amountUInt} ?`
+      title: "Deposit",
+      text: `Are you sure you want deposit ${amountUInt} ?`
     });
 
     if (!q)
       return Alert.toast.success('Aborting...');
 
     const propsRes = useReadSmartProps(chainInfo.protocolName, abiName, {
-      functionName: 'withdraw',
+      functionName: 'deposit',
       args: [amount],
     });
 
@@ -103,12 +99,13 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
       return;
     }
 
-    // let isConfirmed = false;
+    let isConfirmed = false;
     try {
-      // setTimeout(() => {
-      //   if (!isConfirmed)
-      //     throw new Error("Failed to confirm transaction. Please try again");
-      // }, (10 * 1000));
+      setTimeout(() => {
+        if (!isConfirmed)
+          setLoader("");
+        Alert.alert.error("Failed: Transaction confirmation timeout . Please try again");
+      }, (60 * 1000));
 
       setLoader("Please approve transaction on your mobile wallet");
 
@@ -124,6 +121,7 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
           console.log(`hash`, hash)
         }
       });
+      isConfirmed = true;
 
       console.log({ mTxHash });
       setLoader("");
@@ -148,13 +146,14 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
 
   }
 
+
   return (
     <AppRow withLine={true}>
 
       <div className="pd-10">
-        Allowed amount to withdraw
+        Allowed amount to deposit
         {/*
-        <br/>
+        <br />
         {crypto.toShortAddress(address)}
         */}
       </div>
@@ -162,14 +161,13 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
       <div className="pd-10">
         {!success && (message)}
         {isPending && (<InlineLoader title="Updating..." />)}
-
-        {success && (<Symbol symbol={symbol} value={allowed} />)}
+        {success && (<Symbol symbol={symbol} value={allowance} />)}
       </div>
 
       <div className="pd-30">
 
         <input
-          key={`allowance-input`}
+          key={`deposit-input`}
           type="text"
           className="input-main"
           placeholder="Provide required amount"
@@ -189,7 +187,7 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
       <div className="pd-10">
         <ContinueButton
           onContinue={onContinue}
-          text="Withdraw"
+          text="Deposit"
           disabled={isPending}
         />
       </div>
@@ -199,4 +197,4 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
 
 }
 
-export default AllowedToWithdraw;
+export default AllowedToDeposit;

@@ -1,6 +1,8 @@
 import * as ethers from "ethers";
 import tval from "../tval";
 
+const _module = 'crypto';
+
 // 3+1 femtoether    : 1000
 // 6+1 picoether     : 1000000
 // 9+1 nanoether     : 1000000000
@@ -11,6 +13,15 @@ import tval from "../tval";
 // 24+1 mether       : 1000000000000000000000000
 // 27+1 gether       : 1000000000000000000000000000
 // 30+1 tether       : 1000000000000000000000000000000
+
+const isAddress = (address: string | `0x${string}`): boolean => {
+  try {
+    return ethers.isAddress(address);
+  } catch (e: any) {
+    console.error(`${_module}:isAddress: ${e.message}`);
+    return false;
+  }
+}
 
 const fromWei = (bn_t: bigint | string, decimals: number = 18): string => {
   return ethers.formatUnits(bn_t.toString(), decimals);
@@ -28,6 +39,13 @@ const utf8ToBytes32 = (value: string): Buffer => {
   const bytes32 = Buffer.alloc(32);
   bytes32.write(value, 'utf8');
   return bytes32; // .buffer;
+}
+
+const uintToBytes32Hex = (value: number): `0x${string}` => {
+  // const hex = ethers.utils.hexZeroPad(ethers.utils.hexlify(1), 32)
+  value = Math.abs(+(+value).toFixed(0))
+  const hex = (value).toString(16).padStart(64, '0');
+  return `0x${hex}`;
 }
 
 const utf8ToUintArray = (value: string): number[] => {
@@ -61,12 +79,14 @@ const toShortAddress = (addr: `0x${string}` | undefined, cut: number = 4): strin
 
 
 export default {
+  isAddress,
   test,
   fromWei,
   toWei,
   toWeiString,
   utf8ToBytes32,
   utf8ToBytesHex,
+  uintToBytes32Hex,
   utf8ToUintArray,
   toShortAddress,
 }

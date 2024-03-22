@@ -1,14 +1,23 @@
 import { Config } from 'wagmi'
+// import ethers from "ethers";
 
 import proxy from "./abis/proxy.json";
 import erc20 from "./abis/ERC20.json";
 import accessControl from "./abis/accessControl.json";
 
-import config from '@app/config';
+// import config from '@app/config';
+// import crypto from "@app/utils/crypto";
 
 export type Address = `0x${string}`;
 export interface IAbi { [key: string]: any }
 export interface IConfig extends Config { }
+
+export enum EAccessControlRole {
+  admin = '0x0000000000000000000000000000000000000000000000000000000000000000',
+}
+
+// crypto.uintToBytes32Hex(0);
+// >> 0x0000000000000000000000000000000000000000000000000000000000000000
 
 export enum EAbis {
   proxy = 'proxy',
@@ -32,7 +41,7 @@ export interface IRes {
 export interface IUseSmartSmartProps {
   address?: Address;
   functionName: string;
-  args?: string[];
+  args?: any[];
   account?: Address | undefined;
   config?: IConfig;
   chainId?: number;

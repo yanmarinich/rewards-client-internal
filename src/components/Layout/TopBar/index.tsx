@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useChains, ChainIcon, ConnectKitButton, useChainIsSupported } from "connectkit";
 import { useAccount, useSwitchChain, useDisconnect } from "wagmi";
 
 import "./index.scss";
-import "../../../utils/prototype";
+import "@app/utils/prototype";
 
-import * as Alert from "../../../utils/swal";
-import config from "../../../config";
-import store from '../../../store';
+import * as Alert from "@app/utils/swal";
+import config from "@app/config";
+import store from '@app/store';
 
 import ConnectButton from "../ConnectButton";
 
@@ -18,19 +18,28 @@ const TopBar = () => {
   const { address, isConnecting, isDisconnected } = useAccount();
   const { disconnect: _disconnect } = useDisconnect();
 
+  const [end, setOnEnd] = useState<boolean>(false);
+
   const isConnected = ((isConnecting || !isDisconnected) && address);
 
   const disconnect = (): void => {
     setLoader("Processing...");
     setTimeout(() => {
       _disconnect();
-      setTimeout(() => {
-        setLoader("");
-      }, 1000);
+      setOnEnd(true);
+      // setTimeout(() => {
+      //   setLoader("");
+      // }, 1000);
     }, 500);
   }
 
-  // useEffect(() => {}, []);
+  useEffect(() => {
+    if (end) {
+      setTimeout(() => {
+        setLoader("");
+      }, 1000);
+    }
+  }, [end]);
 
   return (
     <div className="top-bar-wrapper">

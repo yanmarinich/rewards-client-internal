@@ -2,9 +2,9 @@ import React, { useEffect, FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./index.scss";
-import "../../../utils/prototype";
-// import * as Alert from "../../../utils/swal";
-// import config from "../../../config";
+import "@app/utils/prototype";
+// import * as Alert from "@app/utils/swal";
+// import config from "@app/config";
 
 export interface IActionBarProps {
   disabled: boolean;

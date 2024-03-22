@@ -27,10 +27,10 @@ export const ids: IIDs = {
 const wagmiConfig: Config = createConfig(
   getDefaultConfig({
     chains: [
-      arbitrum,
       arbitrumTestnet,
-      fantom,
+      arbitrum,
       fantomTestnet,
+      fantom,
       // polygon,
       // mainnet,
     ],

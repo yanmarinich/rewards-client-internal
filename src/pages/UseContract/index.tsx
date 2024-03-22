@@ -51,7 +51,8 @@ import FooterShowChainInfo from "@app/components/common/FooterShowChainInfo";
 import { IAppProps } from "@app/interfaces/app.interfaces";
 
 import ContractToken from "./contracts/Token";
-import RewardContract from "./contracts/RewardContract";
+import RewardContractUser from "./contracts/RewardContractUser";
+import RewardContractAdmin from "./contracts/RewardContractAdmin";
 
 const UserContract: FC<IAppProps> = (props: IAppProps) => {
 
@@ -98,7 +99,8 @@ const UserContract: FC<IAppProps> = (props: IAppProps) => {
 
   const SmartContracts = [
     ContractToken,
-    RewardContract,
+    RewardContractUser,
+    RewardContractAdmin,
   ];
 
   const ContractWrapperNotFound = () => {

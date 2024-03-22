@@ -21,6 +21,18 @@
   // background: #F00;
 }
 
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
 .content-center {
   text-align: center;
   width: 100%;
@@ -39,6 +51,18 @@
       vertical-align: top !important;
     }
   }
+}
+
+.red {
+  color: #F44;
+}
+
+.green {
+  color: #4e4;
+}
+
+.blue {
+  color: #66e;
 }
 
 .pd-10,
@@ -78,11 +102,85 @@
 }
 
 
-.input-main {
+.input-main-wrapper {
+  margin: 15px auto;
+  text-align: center;
+  // outline: none;
   box-sizing: border-box;
   padding: 10px;
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
-  margin-bottom: 20px;
+  // background-color: #F00;
   // margin-top: 20px;
 }
+
+.input-main-lable {
+  box-sizing: border-box;
+  padding: 0 0 8px 10px;
+  text-align: left;
+}
+
+.input-main {
+  // outline: none;
+  outline-width: 1px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  padding: 10px;
+  max-width: 500px;
+  width: 100%;
+  margin-bottom: 10px;
+  // margin-top: 20px;
+}
+
+
+.system-btn {
+  border-radius: 6px;
+  border-color: #888;
+  width: auto;
+  min-width: 120px;
+  background-color: #0c1932;
+  padding: 10px;
+}
+
+.system-btn:disabled {
+  background-color: #666;
+  color: #999;
+  cursor: default;
+}
+
+.system-btn-width {
+  /* min-width: 120px !important; */
+  /* width: auto; */
+  max-width: 240px;
+}
+
+.system-btn-mini {
+  max-width: 96px !important;
+  min-width: 10px !important;
+  margin: 0 10px;
+  background-color: #4c5972;
+  vertical-align: top;
+  width: 80px;
+}
+
+
+
+@media only screen and (max-width: 420px) {
+  .hide-on-sm {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: 421px) and (max-width: 640px) {
+  .hide-on-md {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: 641px) and (max-width: 768px) {}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {}
+
+@media only screen and (min-width: 1025px) and (max-width: 1280px) {}
+
+@media only screen and (min-width: 1280px) {}

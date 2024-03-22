@@ -1,6 +1,6 @@
 import React, { useEffect, FC } from "react";
 
-import { IAppProps } from "../../../interfaces/app.interfaces"
+import { IAppProps } from "@app/interfaces/app.interfaces"
 
 import "./index.scss";
 

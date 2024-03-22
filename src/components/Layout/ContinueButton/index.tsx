@@ -1,7 +1,7 @@
 import React, { useEffect, FC } from "react";
 
-import tval from "../../../utils/tval";
-import { IAppProps } from "../../../interfaces/app.interfaces"
+import tval from "@app/utils/tval";
+import { IAppProps } from "@app/interfaces/app.interfaces"
 
 import "./index.scss";
 
