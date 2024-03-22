@@ -1,0 +1,88 @@
+.supported-chain-wrapper {
+  padding: 4px;
+}
+
+.supported-chain-item {
+  box-sizing: border-box;
+  padding: 8px 0;
+  margin-bottom: 5px;
+}
+
+.chain-icon {
+  display: inline-block;
+  vertical-align: top;
+  padding: 0 8px;
+}
+
+.chain-item-name {
+  display: inline-block;
+  min-width: 200px;
+  text-align: left;
+  // background: #F00;
+}
+
+.content-center {
+  text-align: center;
+  width: 100%;
+  padding: 5px;
+  // background-color: #F00;
+  box-sizing: border-box;
+
+  &>div {
+    // padding: 5px;
+    // background-color: #00F;
+    // margin: 10px auto !important;
+    box-sizing: border-box;
+
+    &>button {
+      display: inline-block !important;
+      vertical-align: top !important;
+    }
+  }
+}
+
+.pd-10,
+.pd-15,
+.pd-20,
+.h-line {
+  box-sizing: border-box;
+}
+
+.pd-10 {
+  padding: 5px;
+}
+
+.pd-15 {
+  padding: 8px;
+}
+
+.pd-20 {
+  padding: 12px;
+}
+
+.pd-25 {
+  padding: 18px;
+}
+
+.pd-30 {
+  padding: 24px;
+}
+
+
+.h-line {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 1px;
+  border-top: dashed 1px #545454;
+  margin: 10px auto;
+}
+
+
+.input-main {
+  box-sizing: border-box;
+  padding: 10px;
+  max-width: 400px;
+  width: 100%;
+  margin-bottom: 20px;
+  // margin-top: 20px;
+}

@@ -1,0 +1,31 @@
+.action-bar-wrapper {
+  margin-top: 10px;
+  box-sizing: border-box;
+  padding: 5px 0 5px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  color: #000;
+  // background: #F00;
+
+  &>.item {
+    flex-grow: 1;
+    max-width: 180px;
+    line-height: 48px;
+    padding: 0;
+    margin: 0;
+
+    &>button {
+      padding: 8px;
+      width: 96px;
+      border-radius: 6px;
+
+      &:disabled {
+        background: #1c2942;
+        border: solid 1px #3c4962;
+        color: #777;
+        cursor: default;
+      }
+    }
+  }
+}

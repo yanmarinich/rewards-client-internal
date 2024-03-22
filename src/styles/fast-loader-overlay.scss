@@ -1,0 +1,98 @@
+#fast-loader-overlay-wrapper,
+#fast-loader-overlay-modal,
+#fast-loader-overlay-modal-title-wrapper,
+#fast-loader-overlay-modal-title,
+#fast-loader-overlay-modal-body,
+.fast-loader-overlay-modal-body-row,
+.fast-loader-overlay-modal-body-row-title,
+.fast-loader-overlay-modal-body-row-body,
+#fast-loader-overlay-spinner-wrapper,
+#fast-loader-overlay-modal-footer {
+  box-sizing: border-box;
+}
+
+#fast-loader-overlay-wrapper {
+  transition: all 0.075s;
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 1400;
+}
+
+#fast-loader-overlay-modal {
+  transition: all 0.075s;
+  width: Min(90%, 750px);
+  max-width: 90%;
+  /*margin-top: -2000px;*/
+  margin-top: 20%;
+  margin-inline: auto;
+  padding: 20px;
+  /*background: var( --var-theme-color-main-bg );*/
+  /*background: #F00;*/
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+#fast-loader-overlay-modal-title-wrapper,
+#fast-loader-overlay-modal-body {
+  margin-bottom: 10px;
+}
+
+#fast-loader-overlay-modal-title-wrapper {
+  padding: 10px;
+  flex-grow: 0.1;
+}
+
+#fast-loader-overlay-modal-body {
+  flex-grow: 1;
+  min-height: 150px;
+}
+
+#fast-loader-overlay-modal-title-wrapper {
+  // background: var(--dbg-1);
+  /*background: #fff;*/
+  background: transparent;
+}
+
+#fast-loader-overlay-modal-title {
+  // background: var(--dbg-1);
+  font-size: 22px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+#fast-loader-overlay-modal-title-wrapper>span {
+  margin-top: 30px;
+}
+
+#fast-loader-overlay-spinner-wrapper {
+  padding: 20px;
+  /*background: #fff;*/
+  background: transparent;
+  text-align: center;
+}
+
+#fast-loader-overlay-spinner-wrapper>img {
+  max-width: Min(96px, 30%);
+}
+
+.swal2-title {
+  position: relative;
+  max-width: 100%;
+  margin: 0;
+  padding: .8em 1em 0;
+  color: #666 !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  text-align: center;
+  text-transform: none;
+  word-wrap: break-word;
+  font-weight: normal !important;
+}
+
+.swal2-styled {
+  min-width: 120px !important;
+}
