@@ -21,7 +21,7 @@ const ActionBar: FC<IActionBarProps> = ({ text, disabled, onAction }) => {
           title="Back"
           disabled={disabled}
           onClick={() => {
-            navigate(onAction);
+            navigate(onAction, { replace: true });
           }}
         >
           {text || <span>&lt; Back</span>}

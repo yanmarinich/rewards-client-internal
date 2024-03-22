@@ -46,7 +46,7 @@ const IncreaseAllowance: FC<ICommonProps> = ({
   );
 
   const {
-    // writeContract,
+    writeContract,
     writeContractAsync,
   } = useWriteContract();
 
@@ -57,16 +57,16 @@ const IncreaseAllowance: FC<ICommonProps> = ({
     if (!tval.isPosNumber(allowance))
       return Alert.toast.error(`Amount can't be (0) zero`);
 
-    if (balance < allowance)
-      return Alert.toast.error(`Insufficient funds, balance:  ${balance}`);
+    // if (balance < allowance)
+    //   return Alert.toast.error(`Insufficient funds, balance:  ${balance}`);
 
-    const q = await Alert.confirm({
-      title: "Approve Allowance",
-      text: `Are you sure you want approve ${allowance} ?`
-    });
+    // const q = await Alert.confirm({
+    //   title: "Approve Allowance",
+    //   text: `Are you sure you want approve ${allowance} ?`
+    // });
 
-    if (!q)
-      return Alert.toast.success('Aborting...');
+    // if (!q)
+    //   return Alert.toast.success('Aborting...');
 
     const amount = crypto.toWei(allowance, 18).toString()
     const propsRes = getWriteSmartProps(chainInfo.protocolName, abiName, {
@@ -85,16 +85,18 @@ const IncreaseAllowance: FC<ICommonProps> = ({
 
     let isConfirmed = false;
     try {
-      setTimeout(() => {
-        if (!isConfirmed)
+      const timeout = setTimeout(() => {
+        if (!isConfirmed) {
           setLoader("");
-        Alert.alert.error("Failed: Transaction confirmation timeout . Please try again");
+          Alert.alert.error("Failed: Transaction confirmation timeout . Please try again");
+        }
       }, (60 * 1000));
 
       setLoader("Please approve transaction on your mobile wallet");
 
       const params: any = propsRes.data as ISmartContractParams;
       const mTxHash = await writeContractAsync(params);
+      clearTimeout(timeout);
       isConfirmed = true;
       setLoader("");
 

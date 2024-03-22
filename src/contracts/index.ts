@@ -8,9 +8,30 @@ export type Address = `0x${string}`;
 export interface IAbi { [key: string]: any }
 export interface IConfig extends Config { }
 
+export type Role = `0x${string}`;
+
 export enum EAccessControlRole {
+  none = '0x1000000000000000000000000000000000000000000000000000000000000000',
   admin = '0x0000000000000000000000000000000000000000000000000000000000000000',
+  manager = '0x0000000000000000000000000000000000000000000000000000000000000001',
 }
+
+export enum EAccessControlRoleName {
+  none = 'No Role',
+  admin = 'Admin',
+  manager = 'Manager',
+}
+
+export interface IAcccessControlRoles {
+  uint256: EAccessControlRole;
+  name: EAccessControlRoleName;
+}
+
+export const accessControlRols: IAcccessControlRoles[] = [
+  { uint256: EAccessControlRole.none, name: EAccessControlRoleName.none },
+  { uint256: EAccessControlRole.admin, name: EAccessControlRoleName.admin },
+  { uint256: EAccessControlRole.manager, name: EAccessControlRoleName.manager },
+];
 
 export enum EAbis {
   proxy = 'proxy',

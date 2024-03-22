@@ -11,6 +11,7 @@ export const CustomLoader: FC<ICustomLoaderProps> = (props: ICustomLoaderProps) 
     <div className="app-common-loader-wrapper">
       {props.loader}
       <br />
+      <br />
       <img
         // alt={props.loader}
         // title={props.loader}

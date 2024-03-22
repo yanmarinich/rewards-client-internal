@@ -28,7 +28,7 @@ const options: ConnectKitOptions = {
   // bufferPolyfill?: boolean;
   // customAvatar?: React.FC<CustomAvatarProps>;
   // initialChainId?: number;
-  enforceSupportedChains: true,
+  // enforceSupportedChains: true,
   // ethereumOnboardingUrl?: string;
   // walletOnboardingUrl?: string;
   // disableSiweRedirect?: boolean;

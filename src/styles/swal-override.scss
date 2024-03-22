@@ -34,4 +34,14 @@
 
 .swal2-popup {
   width: 42rem;
+  max-width: 90% !important;
+}
+
+.swal2-deny {
+  background: #b44 !important;
+}
+
+.swal2-confirm {
+  background: #646cff !important;
+  background: #1c5982 !important;
 }

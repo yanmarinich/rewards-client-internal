@@ -65,7 +65,7 @@ const SelectContract: FC<IAppProps> = (props: IAppProps) => {
   return (
     <>
 
-      <ActionBar disabled={false} onAction="/select-protocol" />
+      <ActionBar disabled={false} onAction="/" />
 
       <AppRoot>
 

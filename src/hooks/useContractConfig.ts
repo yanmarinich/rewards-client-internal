@@ -18,7 +18,7 @@ export const useContractConfig = (chainInfo: IChainInfo): IUseContractConfigRes 
       { display: 'Thrive-Coin', addres: cfg?.erc20?.address, abiName: EAbis.erc20 },
       { display: 'Reward Contract (User)', addres: cfg?.proxy?.address, abiName: EAbis.proxy },
       { display: 'Reward Contract (Admin)', addres: cfg?.proxy?.address, abiName: EAbis.proxy },
-      // { display: 'Access-Control', addres: cfg?.accessControl?.address, abiName: EAbis.accessControl },
+      { display: 'Access-Control', addres: cfg?.accessControl?.address, abiName: EAbis.accessControl },
     ];
 
     const success = !!(cfg?.erc20?.address);

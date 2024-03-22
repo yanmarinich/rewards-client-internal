@@ -102,17 +102,19 @@ const Reward: FC<ICommonProps> = ({
 
     let isConfirmed = false;
     try {
-      setTimeout(() => {
-        if (!isConfirmed)
+      const timeout = setTimeout(() => {
+        if (!isConfirmed) {
           setLoader("");
-        Alert.alert.error("Failed: Transaction confirmation timeout . Please try again");
+          Alert.alert.error("Failed: Transaction confirmation timeout . Please try again");
+        }
       }, (60 * 1000));
 
       setLoader("Please approve transaction on your mobile wallet");
 
       const params: any = propsRes.data as ISmartContractParams;
-
+      writeContract(params);
       const mTxHash = await writeContractAsync(params);
+      clearTimeout(timeout);
       isConfirmed = true;
       setLoader("");
 
@@ -138,66 +140,72 @@ const Reward: FC<ICommonProps> = ({
 
 
   return (
-    <AppRow withLine={true}>
+    <>
+      <AppRow withLine={true}>
+        <div className="pd-10">
+          <div>Current Account: </div>
+          <div>{address}</div>
+          {
+            (message || !hasRole)
+              ? <b className="red">{message || "You are not in the Admin group"}</b>
+              : <b className="green">{"You are Administrator"}</b>
+          }
+        </div>
 
-      <div className="pd-10">
-        Reward <Symbol symbol={symbol} /> Token Holder
-      </div>
-
-      <div className="input-main-wrapper">
-        <div className="input-main-lable">Destination Addreess</div>
-        <input
-          key={`target-address-input`}
-          type="text"
-          className="input-main"
-          placeholder="Destionation Address"
-          // defaultValue={"0x417fff1315774037da11ed348e82A3a6912875B8"}
-          ref={addressRef}
-        />
-      </div>
-
-      <div className="input-main-wrapper">
-        <div className="input-main-lable">Reward Amount</div>
-        <input
-          key={`target-amount-input`}
-          type="text"
-          className="input-main"
-          placeholder="Destionation Address"
-          // defaultValue={"0.25"}
-          ref={amountRef}
-        />
-      </div>
-
-      <div className="input-main-wrapper">
-        <div className="input-main-lable">Reward Note</div>
-        <input
-          key={`target-note-input`}
-          type="text"
-          className="input-main"
-          placeholder="Reward Note"
-          // defaultValue={""}
-          ref={noteRef}
-        />
-      </div>
+      </AppRow>
 
 
-      <div className="pd-10">
-        {
-          (message || !hasRole)
-            ? <b className="red">{message || "You are not in the Admin group"}</b>
-            : <i>&nbsp;</i>
-        }
-      </div>
+      <AppRow withLine={true}>
+        <div className="pd-10">
+          Reward <Symbol symbol={symbol} /> Token Holder
+        </div>
 
-      <div className="pd-10">
-        <ContinueButton
-          onContinue={onContinue}
-          text="Reward"
-          disabled={!(success && hasRole)}
-        />
-      </div>
+        <div className="input-main-wrapper">
+          <div className="input-main-lable">Destination Addreess</div>
+          <input
+            key={`target-address-input`}
+            type="text"
+            className="input-main"
+            placeholder="Destionation Address"
+            defaultValue={"0x417fff1315774037da11ed348e82A3a6912875B8"}
+            ref={addressRef}
+          />
+        </div>
 
-    </AppRow>
+        <div className="input-main-wrapper">
+          <div className="input-main-lable">Reward Amount</div>
+          <input
+            key={`target-amount-input`}
+            type="text"
+            className="input-main"
+            placeholder="Destionation Address"
+            defaultValue={"0.25"}
+            ref={amountRef}
+          />
+        </div>
+
+        <div className="input-main-wrapper">
+          <div className="input-main-lable">Reward Note</div>
+          <input
+            key={`target-note-input`}
+            type="text"
+            className="input-main"
+            placeholder="Reward Note"
+            defaultValue={""}
+            ref={noteRef}
+          />
+        </div>
+
+        <div className="pd-10">
+          <ContinueButton
+            onContinue={onContinue}
+            text="Reward"
+            disabled={!(success && hasRole)}
+          />
+        </div>
+
+      </AppRow>
+    </>
   )
 
 }

@@ -91,15 +91,18 @@ const AllowedToWithdraw: FC<ICommonProps> = ({
 
     let isConfirmed = false;
     try {
-      setTimeout(() => {
-        if (!isConfirmed)
+      const timeout = setTimeout(() => {
+        if (!isConfirmed) {
           setLoader("");
-        Alert.alert.error("Failed: Transaction confirmation timeout . Please try again");
+          Alert.alert.error("Failed: Transaction confirmation timeout . Please try again");
+        }
       }, (60 * 1000));
 
-      const params: any = propsRes.data as ISmartContractParams;
+      setLoader("Please approve transaction on your mobile wallet");
 
+      const params: any = propsRes.data as ISmartContractParams;
       const mTxHash = await writeContractAsync(params);
+      clearTimeout(timeout);
       isConfirmed = true;
       setLoader("");
 
