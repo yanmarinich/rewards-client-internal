@@ -9,4 +9,12 @@ Currently, two official plugins are available:
 
 # Set up
 
-after `npm install`, need to set the value of `VITE_API_BASE_URL` to the core api url for example `http://localhost:3002/v1`, to start the project do `npm start`.
+.env ===  file is required
+
+```bash
+
+yarn .
+yarn start
+
+```
+
