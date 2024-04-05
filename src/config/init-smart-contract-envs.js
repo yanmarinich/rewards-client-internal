@@ -3,6 +3,8 @@ const requiredKeys = [
   'impl',
   'erc20',
   'accessControl',
+  'communityFactory',
+  'communityAddress',
 ];
 
 export const initSmartContractEnvs = (protocol, network = 'testnet') => {
@@ -24,6 +26,12 @@ export const initSmartContractEnvs = (protocol, network = 'testnet') => {
     },
     accessControl: {
       address: import.meta.env[`${prefix}_ACCESS_CONTROL_ADDRESS`],
+    },
+    communityFactory: {
+      address: import.meta.env[`${prefix}_COMMUNITY_FACTORY`],
+    },
+    communityAddress: {
+      address: import.meta.env[`${prefix}_COMMUNITY_ADDRESS`],
     },
     isInited: false,
   };

@@ -13,11 +13,15 @@ const initialState: ISession = {
   protocolName: EProtocol.arbitrumTestnet,
   isInited: false,
   selectedContract: -1,
+  selectedTargetCommuntyTokenContract: null,
+  isSelectedTargetCommuntyTokenContractValid: false,
   smartConfig: {
     proxy: { address: '' as Address },
     accessControl: { address: '' as Address },
     erc20: { address: '' as Address },
     impl: { address: '' as Address },
+    communityFactory: { address: '' as Address },
+    communityAddress: { address: '' as Address },
     isInited: false,
   },
 };
@@ -27,11 +31,15 @@ const state: ISession = {
   protocolName: EProtocol.arbitrumTestnet,
   isInited: false,
   selectedContract: -1,
+  selectedTargetCommuntyTokenContract: null,
+  isSelectedTargetCommuntyTokenContractValid: false,
   smartConfig: {
     proxy: { address: '' as Address },
     accessControl: { address: '' as Address },
     erc20: { address: '' as Address },
     impl: { address: '' as Address },
+    communityFactory: { address: '' as Address },
+    communityAddress: { address: '' as Address },
     isInited: false,
   },
 }
@@ -44,8 +52,16 @@ export interface ISessionState {
   getChainInfo: () => IChainInfo;
   setSmartConfig: (cfg: ISCConfig) => void;
   getSmartConfig: () => ISCConfig;
+
   setSelectedContract: (index: number) => void;
   getSelectedContract: () => number;
+
+  setTargetCommuntyTokenContract: (address: Address | null) => void;
+  getTargetCommuntyTokenContract: () => Address | null;
+
+  setIsSelectedTargetCommuntyTokenContractValid: (value: boolean) => void;
+  getIsSelectedTargetCommuntyTokenContractValid: () => boolean | null;
+
   reset: () => boolean;
 }
 
@@ -109,6 +125,31 @@ const store = create(
         }));
         return true;
       },
+      getTargetCommuntyTokenContract: (): Address | null => {
+        return get()._session.selectedTargetCommuntyTokenContract;
+      },
+      setTargetCommuntyTokenContract: (selectedTargetCommuntyTokenContract: Address | null): void => {
+        set(produce((state) => {
+          state._session = {
+            ...state._session,
+            selectedTargetCommuntyTokenContract,
+          };
+        }));
+      },
+
+
+      getIsSelectedTargetCommuntyTokenContractValid: (): boolean => {
+        return get()._session.isSelectedTargetCommuntyTokenContractValid;
+      },
+      setIsSelectedTargetCommuntyTokenContractValid: (isSelectedTargetCommuntyTokenContractValid: boolean): void => {
+        set(produce((state) => {
+          state._session = {
+            ...state._session,
+            isSelectedTargetCommuntyTokenContractValid,
+          };
+        }));
+      },
+
     }),
     {
       name: 'persist-store-session',

@@ -25,6 +25,8 @@ import ContractToken from "./contracts/Token";
 import RewardContractUser from "./contracts/RewardContractUser";
 import RewardContractAdmin from "./contracts/RewardContractAdmin";
 import AccessControl from "./contracts/AccessControl";
+import CommunityContractUser from "./contracts/CommunityContractUser";
+import CommunityContractAdmin from "./contracts/CommunityContractAdmin";
 
 const UserContract: FC<IAppProps> = (props: IAppProps) => {
 
@@ -56,6 +58,8 @@ const UserContract: FC<IAppProps> = (props: IAppProps) => {
     RewardContractUser,
     RewardContractAdmin,
     AccessControl,
+    CommunityContractUser,
+    CommunityContractAdmin,
   ];
 
   const ContractWrapperNotFound = () => {

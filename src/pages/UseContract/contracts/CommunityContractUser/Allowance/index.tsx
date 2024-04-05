@@ -3,8 +3,7 @@ import { useAccount, useWriteContract } from "wagmi";
 import { getChains } from '@wagmi/core'
 import { Chain } from "viem";
 
-import "./index.scss"
-
+import "./index.scss";
 import { ICommonProps } from "../../interfaces";
 
 import crypto from "@app/utils/crypto";
@@ -15,44 +14,50 @@ import wagmiConfig from "@app/providers/wagmi/config";
 import { ISmartContractParams } from "@app/contracts";
 import { getTxErrorMessage } from "@app/contracts/utils";
 
-import useSymbol from "@app/hooks/erc20/useSymbol";
-import { Address, EAbis, useReadSmartProps } from "@app/hooks/useSmart";
-import useAllowance from "@app/hooks/erc20/allowance";
-
-
 import AppRow from "@app/components/Layout/AppRow";
 import { InlineLoader } from "@app/components/common/app/InlineLoader";
-import ContinueButton from "@app/components/Layout/ContinueButton";
 import Symbol from "@app/components/common/app/Symbol";
+import useAllowance from "@app/hooks/erc20/allowance";
+import useSymbol from "@app/hooks/erc20/useSymbol";
+import { Address, EAbis, useReadSmartProps } from "@app/hooks/useSmart";
+import { ISCConfig } from "@app/config/interfaces";
+import ContinueButton from "@app/components/Layout/ContinueButton";
 
-
-const AllowedToDeposit: FC<ICommonProps> = ({
-  chainInfo,
-  abiName,
-  symbol = '',
-  onUpdateRequired
+const Allowance: FC<ICommonProps> = ({
+  chainInfo, abiName, symbol = '', onUpdateRequired
 }) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
-
   const setLoader = store.system((state) => (state.setLoader));
   const { writeContractAsync, writeContract } = useWriteContract();
-  const { address, isConnecting, isDisconnected } = useAccount();
+
+  const { address } = useAccount();
+
+  const targetTokenContractAddress
+    = store.session((state) => (state.getTargetCommuntyTokenContract()));
 
   const chains = getChains(wagmiConfig);
   const mChain = chains.find((chain: Chain) => (chain.id === chainInfo.chainId));
   const blockExplorerUrl = mChain?.blockExplorers?.default?.url || "";
   const blockExplorerName = mChain?.blockExplorers?.default?.name || "";
 
-  const symbolRes = useSymbol(chainInfo, EAbis.erc20);
+  const cfg: ISCConfig = store.session((state) => (state.getSmartConfig()));
+
+  const symbolRes = useSymbol(
+    chainInfo,
+    abiName,
+    targetTokenContractAddress as Address
+  );
+
   symbol = symbolRes.symbol;
 
   const { success, message, allowance, isPending } = useAllowance(
     chainInfo,
-    EAbis.erc20,
-    address as Address
+    abiName,
+    address as Address,
+    cfg.communityAddress.address as Address,
+    targetTokenContractAddress as Address
   );
-
 
   const setMax = () => {
     const input = inputRef?.current;
@@ -73,19 +78,30 @@ const AllowedToDeposit: FC<ICommonProps> = ({
     const amountBn = crypto.toWei(amountUInt, 18);
     const amount = amountBn.toString();
 
+    const table = Alert.createDialogTable(
+      "Are you sure you want deposit ? ",
+      [
+        { key: 'Amount', value: `<b>${symbol}</b> ${amountUInt}` },
+        { key: 'Token', value: `<b>${symbol}</b> ${crypto.toShortAddress(targetTokenContractAddress as Address)}` },
+        { key: 'To', value: crypto.toShortAddress(cfg.communityAddress.address as Address) },
+      ]
+    );
+
     const q = await Alert.confirm({
-      title: "Deposit",
-      text: `Are you sure you want deposit ${amountUInt} ?`
+      title: "Deposit?",
+      html: table
     });
 
     if (!q)
       return Alert.toast.success('Aborting...');
 
-    const propsRes = useReadSmartProps(chainInfo.protocolName, abiName, {
+    const propsRes = useReadSmartProps(chainInfo.protocolName, EAbis.communityAddress, {
       functionName: 'deposit',
-      args: [amount],
+      args: [
+        targetTokenContractAddress,
+        amount,
+      ],
     });
-
 
     if (!propsRes.success) {
       setLoader("");
@@ -129,47 +145,45 @@ const AllowedToDeposit: FC<ICommonProps> = ({
     }
 
   }
-
-
   return (
     <AppRow withLine={true}>
 
-      <div className="pd-10">
-        Allowed amount to deposit
+      <div className="pd-20">
+        <div className="pd-10">
+          Allowed amount to deposit
+        </div>
+        <div className="pd-10">
+          {!success && (message)}
+          {isPending && (<InlineLoader title="Updating..." />)}
+          {success && (<Symbol symbol={symbol} value={allowance} />)}
+        </div>
       </div>
 
-      <div className="pd-10">
-        {!success && (message)}
-        {isPending && (<InlineLoader title="Updating..." />)}
-        {success && (<Symbol symbol={symbol} value={allowance} />)}
-      </div>
+      <div className="pd-20">
+        <div className="pd-30">
+          <input
+            key={`deposit-input`}
+            type="text"
+            className="input-main"
+            placeholder="Provide required amount"
+            ref={inputRef}
+          />
+          <button
+            disabled={isPending}
+            className="system-btn system-btn-mini"
+            onClick={() => { setMax() }}
+          >
+            MAX
+          </button>
+        </div>
 
-      <div className="pd-30">
-
-        <input
-          key={`deposit-input`}
-          type="text"
-          className="input-main"
-          placeholder="Provide required amount"
-          ref={inputRef}
-        />
-
-        <button
-          disabled={isPending}
-          className="system-btn system-btn-mini"
-          onClick={() => { setMax() }}
-        >
-          MAX
-        </button>
-
-      </div>
-
-      <div className="pd-10">
-        <ContinueButton
-          onContinue={onContinue}
-          text="Deposit"
-          disabled={isPending}
-        />
+        <div className="pd-10">
+          <ContinueButton
+            onContinue={onContinue}
+            text="Deposit"
+            disabled={isPending}
+          />
+        </div>
       </div>
 
     </AppRow>
@@ -177,4 +191,4 @@ const AllowedToDeposit: FC<ICommonProps> = ({
 
 }
 
-export default AllowedToDeposit;
+export default Allowance;

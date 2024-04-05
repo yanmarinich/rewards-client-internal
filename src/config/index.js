@@ -10,10 +10,13 @@ const arbitrum = initSmartContractEnvs('ARBITRUM', 'MAINNET');
 const fantom = initSmartContractEnvs('FANTOM', 'TESTNET');
 const fantomTestnet = initSmartContractEnvs('FANTOM', 'TESTNET');
 
+const infuraApiKey = import.meta.env.VITE_API_INFURA_API_KEY;
+
 export default {
   baseUrl,
   walletConnectProjectId,
   appName,
+  infuraApiKey,
   SC: {
     arbitrum,
     arbitrumTestnet,

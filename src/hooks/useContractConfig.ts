@@ -19,6 +19,10 @@ export const useContractConfig = (chainInfo: IChainInfo): IUseContractConfigRes 
       { display: 'Reward Contract (User)', addres: cfg?.proxy?.address, abiName: EAbis.proxy },
       { display: 'Reward Contract (Admin)', addres: cfg?.proxy?.address, abiName: EAbis.proxy },
       { display: 'Access-Control', addres: cfg?.accessControl?.address, abiName: EAbis.accessControl },
+      // ---------------------
+      // { display: 'Community-Factory', addres: cfg?.communityFactory?.address, abiName: EAbis.communityFactory },
+      { display: 'Community-Contract (User)', addres: cfg?.communityAddress?.address, abiName: EAbis.communityAddress },
+      { display: 'Community-Contract (Admin)', addres: cfg?.communityAddress?.address, abiName: EAbis.communityAddress },
     ];
 
     const success = !!(cfg?.erc20?.address);

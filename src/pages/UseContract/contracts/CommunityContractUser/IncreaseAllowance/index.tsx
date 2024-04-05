@@ -30,6 +30,9 @@ const IncreaseAllowance: FC<ICommonProps> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const targetTokenContractAddress
+    = store.session((state) => (state.getTargetCommuntyTokenContract()));
+
   const { address, isConnecting, isDisconnected } = useAccount();
   const selectedContract: number = store.session((state) => (state.getSelectedContract()));
   const cfg: ISCConfig = store.session((state) => (state.getSmartConfig()));
@@ -57,19 +60,9 @@ const IncreaseAllowance: FC<ICommonProps> = ({
     if (!tval.isPosNumber(allowance))
       return Alert.toast.error(`Amount can't be (0) zero`);
 
-    // if (balance < allowance)
-    //   return Alert.toast.error(`Insufficient funds, balance:  ${balance}`);
-
-    // const q = await Alert.confirm({
-    //   title: "Approve Allowance",
-    //   text: `Are you sure you want approve ${allowance} ?`
-    // });
-
-    // if (!q)
-    //   return Alert.toast.success('Aborting...');
-
     const amount = crypto.toWei(allowance, 18).toString()
     const propsRes = getWriteSmartProps(chainInfo.protocolName, EAbis.erc20, {
+      address: targetTokenContractAddress as Address,
       functionName: 'approve',
       args: [
         cfg.communityAddress.address,

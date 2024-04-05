@@ -9,28 +9,22 @@ import {
 } from "./../useSmart";
 import { ISCConfig } from "@app/config/interfaces";
 
-export interface IUseAllowanceRes extends IBasicReadContractRes {
-  allowance: number;
+export interface IUseBalancesRes extends IBasicReadContractRes {
+  balance: number;
 }
 
-const useAllowance = (
-  chainInfo: IChainInfo,
-  abiName: EAbis,
-  fromAddress: Address,
-  toAddress?: Address,
-  targetContractAddress?: Address
-): IUseAllowanceRes => {
+const useBalances = (chainInfo: IChainInfo, abiName: EAbis, admin: Address, token: Address): IUseBalancesRes => {
 
   try {
 
     const cfg: ISCConfig = store.session((state) => (state.getSmartConfig()));
 
     const propsRes = useReadSmartProps(chainInfo.protocolName, abiName, {
-      functionName: 'allowance',
-      ...(targetContractAddress ? { address: targetContractAddress } : {}),
+      functionName: 'balances',
       args: [
-        fromAddress as Address,
-        toAddress || cfg.proxy.address,
+        admin as Address,
+        token as Address,
+        // cfg.proxy.address,
       ],
     });
 
@@ -38,7 +32,7 @@ const useAllowance = (
     const sysError = propsRes.message;
 
     if (isSysError)
-      return { success: false, message: sysError, allowance: 0 };
+      return { success: false, message: sysError, balance: 0 };
 
     const params = propsRes.data
     const res = useReadContract(params);
@@ -47,12 +41,12 @@ const useAllowance = (
 
     const message = error ? error.message.split('\n')[0] : '';
     const success = (!isError && !message && typeof data === "bigint");
-    const allowance = (success ? +crypto.fromWei(data) : 0);
+    const balance = (success ? +crypto.fromWei(data) : 0);
 
-    return { success, message, allowance, isPending, status };
+    return { success, message, balance, isPending, status };
   } catch (e: any) {
-    return { success: false, message: e.message, allowance: 0 };
+    return { success: false, message: e.message, balance: 0 };
   }
 }
 
-export default useAllowance;
+export default useBalances;
