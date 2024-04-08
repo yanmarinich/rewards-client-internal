@@ -12,17 +12,12 @@ const arbitrumTestnet = /*#__PURE__*/ defineChain({
   rpcUrls: {
     default: {
       http: [
-        // Testnet (Sepolia)	JSON-RPC over HTTPS
-        `https://arbitrum-sepolia.infura.io/v3/${config.infuraApiKey}`,
-
-        'https://public.stackup.sh/api/v1/node/arbitrum-sepolia', // sometimes: hit request-limit  
-
+        config.blockchainRpcUrl,
+        // sometimes: hit request-limit  
+        'https://public.stackup.sh/api/v1/node/arbitrum-sepolia',
         'https://arbitrum-sepolia.blockpi.network/v1/rpc/public ',
-        'https://sepolia-rollup.arbitrum.io/rpc', // sometimes error
-
-        // Testnet (Sepolia)	JSON-RPC over WebSocket
-        // 'wss://arbitrum-sepolia.infura.io/ws/v3/<API-KEY>',
-
+        // sometimes error
+        'https://sepolia-rollup.arbitrum.io/rpc',
       ],
     },
   },
