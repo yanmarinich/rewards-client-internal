@@ -12,6 +12,7 @@ export interface IUseContractConfigRes extends IRes {
 export const useContractConfig = (chainInfo: IChainInfo): IUseContractConfigRes => {
 
   try {
+
     const cfg: ISCConfig = config.SC[chainInfo.protocolName] || {};
 
     const contracts: IContractItem[] = [
@@ -23,6 +24,8 @@ export const useContractConfig = (chainInfo: IChainInfo): IUseContractConfigRes 
       // { display: 'Community-Factory', addres: cfg?.communityFactory?.address, abiName: EAbis.communityFactory },
       { display: 'Community-Contract (User)', addres: cfg?.communityAddress?.address, abiName: EAbis.communityAddress },
       { display: 'Community-Contract (Admin)', addres: cfg?.communityAddress?.address, abiName: EAbis.communityAddress },
+      // ---------------------
+      { display: 'Contributors', addres: cfg?.contributorsAddress.address, abiName: EAbis.contributorsAddress },
     ];
 
     const success = !!(cfg?.erc20?.address);

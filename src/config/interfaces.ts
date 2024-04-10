@@ -20,6 +20,9 @@ export interface ISCConfig {
   communityAddress: {
     address: Address,
   },
+  contributorsAddress: {
+    address: Address,
+  },
   isInited: boolean;
 }
 

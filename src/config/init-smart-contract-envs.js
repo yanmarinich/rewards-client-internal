@@ -5,6 +5,7 @@ const requiredKeys = [
   'accessControl',
   'communityFactory',
   'communityAddress',
+  'contributorsAddress',
 ];
 
 export const initSmartContractEnvs = (protocol, network = 'testnet') => {
@@ -32,6 +33,9 @@ export const initSmartContractEnvs = (protocol, network = 'testnet') => {
     },
     communityAddress: {
       address: import.meta.env[`${prefix}_COMMUNITY_ADDRESS`],
+    },
+    contributorsAddress: {
+      address: import.meta.env[`${prefix}_CONTRIBUTORS_ADDRESS`],
     },
     isInited: false,
   };

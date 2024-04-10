@@ -65,6 +65,18 @@
   color: #66e;
 }
 
+.h-m-5 {
+  margin-inline: 5px;
+}
+
+.h-m-10 {
+  margin-inline: 10px;
+}
+
+.h-m-15 {
+  margin-inline: 15px;
+}
+
 .pd-10,
 .pd-15,
 .pd-20,
@@ -162,6 +174,12 @@
   width: 80px;
 }
 
+.system-btn-active {
+  background-color: #eee;
+  border-color: #000;
+  color: #000;
+  cursor: default;
+}
 
 
 @media only screen and (max-width: 420px) {

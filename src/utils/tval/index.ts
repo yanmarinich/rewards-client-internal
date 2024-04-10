@@ -42,6 +42,12 @@ export class TVal {
     return typeof value === "number" && Math.abs(value) === Infinity;
   }
 
+  isBigInt(value: any): value is bigint {
+    return (
+      typeof value === "bigint" && !this.isNaN(value)
+    );
+  }
+
   isNumber(value: any): value is number {
     return (
       typeof value === "number" &&
