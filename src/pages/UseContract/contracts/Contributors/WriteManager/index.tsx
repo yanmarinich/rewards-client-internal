@@ -1,10 +1,10 @@
-import React, { FC, useRef, useState } from "react";
-import { useAccount, useWriteContract } from "wagmi";
+import React, { FC, useState } from "react";
+import { useWriteContract } from "wagmi";
 import { getChains } from '@wagmi/core'
 import { Chain } from "viem";
 
 import { ICommonProps } from "../../interfaces";
-import { Address, EAbis, useReadSmartProps } from "@app/hooks/useSmart";
+import { Address, useReadSmartProps } from "@app/hooks/useSmart";
 
 import crypto from "@app/utils/crypto";
 import * as Alert from "@app/utils/swal";
@@ -18,27 +18,20 @@ import {
 
 import AppRow from "@app/components/Layout/AppRow";
 import ContinueButton from "@app/components/Layout/ContinueButton";
-import Symbol from "@app/components/common/app/Symbol";
-
-import useSymbol from "@app/hooks/erc20/useSymbol";
-import useHasAdminRole from "@app/hooks/accessControl/useHasAdminRole";
 
 import wagmiConfig from "@app/providers/wagmi/config";
-import { EAccessControlRole, EAccessControlRoleName, ISmartContractParams } from "@app/contracts";
+import { ISmartContractParams } from "@app/contracts";
 import { getTxErrorMessage } from "@app/contracts/utils";
-import { accessControlRols, IAcccessControlRoles } from "@app/contracts/";
-import useRolesManager from "@app/hooks/proxy/getRoleMemberCount";
-import { InlineLoader } from "@app/components/common/app/InlineLoader";
-// import AccessRoleSelector from "./AccessRoleSelector";
 
-// _contribution_id (uint256) =>  0
-// _metadata_identifier (string) =>  meta
-// _validator_address (string) =>  0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79
-// _address_chain (string) =>  0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79
-// _token (string) =>  0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79
-// _reward (uint256) =>  10000000000000000000
-// _validator_addresses (address[]) =>  [0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79]
-// _validator_rewards (uint256[]) =>  [10000000000000000000]
+// Contract:Write
+//   _contribution_id (uint256) => 0
+//   _metadata_identifier (string) => meta
+//   _validator_address (address) => 0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79
+//   _address_chain (address) => 0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79
+//   _token (address) => 0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79
+//   _reward (uint256) => 10000000000000000000
+//   _validator_addresses (address[]) => [ 0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79 ]
+//   _validator_rewards (uint256[]) => [ 10000000000000000000 ]
 
 enum EInputType {
   text = 'text',
@@ -90,13 +83,12 @@ const inputs: IInput[] = [
 const RolesManager: FC<ICommonProps> = ({
   chainInfo,
   abiName,
-  symbol = '',
-  onUpdateRequired
+  onUpdateRequired,
+  // symbol = '',
 }) => {
 
   const setLoader = store.system((state) => (state.setLoader));
   const { writeContractAsync, writeContract } = useWriteContract();
-  const { address, isConnecting, isDisconnected } = useAccount();
 
   const chains = getChains(wagmiConfig);
   const mChain = chains.find((chain: Chain) => (chain.id === chainInfo.chainId));
@@ -115,11 +107,9 @@ const RolesManager: FC<ICommonProps> = ({
         {
           validator: '' as Address,
           reward: 0
-        }
+        } as IValidatorReward
       ],
     });
-
-  // const [validatorRewards, setValidatorRewards] = useState<IValidatorReward[]>([])
 
   const onContinue = async () => {
 
@@ -127,7 +117,6 @@ const RolesManager: FC<ICommonProps> = ({
       const subType = inp.subType;
       const key = inp.key as keyof typeof validatedContribution;
       const value = validatedContribution[key];
-      console.log(`${key}: (subType: ${subType}) => ${value}`);
 
       switch (subType) {
         case EInputSubType.address: {
@@ -154,34 +143,8 @@ const RolesManager: FC<ICommonProps> = ({
         return Alert.toast.error(`Validator-reward amount is not valid`);
     }
 
-    console.json({ validatedContribution });
-
-    // {
-    //   "validatedContribution": {
-    //     "contributionId": 12,
-    //     "metadataIdentifier": "text",
-    //     "validatorAddress": "0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79",
-    //     "addressChain": "0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79",
-    //     "token": "0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79",
-    //     "reward": 1221,
-    //     "validatorRewards": [
-    //       {
-    //         "validator": "0xE9339Bc14A5a5348Ca1ac5478e986725743D6C79",
-    //         "reward": 12
-    //       }
-    //     ]
-    //   }
-    // }
-
-    // const validatorRewards: any[] = [];
-    // validatedContribution.validatorRewards
-    //   .forEach((validatorReward: IValidatorReward, index: number) => {
-    //     validatorRewards.push({ key: 'Validator', value: crypto.toShortAddress(validatorReward.validator) });
-    //     validatorRewards.push({ key: 'Redward', value: validatorReward.reward });
-    //   });
-
     const table = Alert.createDialogTable(
-      `Are you sure you continue ? `,
+      `Are you sure you want to continue ? `,
       [
         { key: 'ID', value: `${validatedContribution.contributionId}` },
         { key: 'Meta', value: `${validatedContribution.metadataIdentifier}` },
@@ -209,8 +172,6 @@ const RolesManager: FC<ICommonProps> = ({
       return Alert.toast.success('Aborting...');
 
     const callData: any = [
-      // crypto.toWei(validatedContribution.contributionId, 18).toString(),
-      // crypto.toWei(validatedContribution.contributionId, 18).toString(),
       validatedContribution.contributionId,
       validatedContribution.metadataIdentifier || "",
       validatedContribution.validatorAddress,
@@ -341,7 +302,6 @@ const RolesManager: FC<ICommonProps> = ({
                 <input
                   className="input-main"
                   type={inp.type}
-                  // ref={inp.ref}
                   value={value as string | number}
                   onChange={(e) => {
                     const value = inp.subType === EInputSubType.number
@@ -414,22 +374,10 @@ const RolesManager: FC<ICommonProps> = ({
                         />
                       </div>
 
-
-                      {/* validatedContribution.validatorRewards.length === 1 && (
-                        <div className="pd-10">
-                          <ContinueButton
-                            text="Add Validator Reward"
-                            // disabled={(!!roleMessage || !hasRole)}
-                            onContinue={addValidatorRewardRow}
-                          />
-                        </div>
-                      ) */}
-
                       {index > 0 && (
                         <div className="pd-10">
                           <ContinueButton
                             text="Remove Validator Reward"
-                            // disabled={(!!roleMessage || !hasRole)}
                             onContinue={() => {
                               removeValidatorRewardRow(index);
                             }}
@@ -447,7 +395,6 @@ const RolesManager: FC<ICommonProps> = ({
           <div className="pd-0">
             <ContinueButton
               text="Add Validator Reward"
-              // disabled={(!!roleMessage || !hasRole)}
               onContinue={addValidatorRewardRow}
             />
 
@@ -456,7 +403,6 @@ const RolesManager: FC<ICommonProps> = ({
           <div className="pd-30">
             <ContinueButton
               text="Add Contributor"
-              // disabled={(!!roleMessage || !hasRole)}
               onContinue={onContinue}
             />
           </div>

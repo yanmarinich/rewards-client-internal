@@ -82,9 +82,9 @@ const SelectProtocol: FC<IAppProps> = (props: IAppProps) => {
   }
 
   useEffect(() => {
-    if (chainInfo.isInited) {
-      setPrtocolSelected(true);
-    }
+    // if (chainInfo.isInited) {
+    setPrtocolSelected(true);
+    // }
   }, [chainInfo.chainId, chainInfo.protocolName, chainInfo.isInited]);
 
   return (

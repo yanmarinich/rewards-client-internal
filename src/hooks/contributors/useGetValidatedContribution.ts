@@ -1,16 +1,14 @@
 // import { ethers, AbiCoder } from "ethers";
 import { useReadContract } from "wagmi";
 
-import store from '@app/store';
 import crypto from "@app/utils/crypto";
 
 import {
   Address, EAbis, IBasicReadContractRes,
   IChainInfo, useReadSmartProps,
 } from "./../useSmart";
-import { ISCConfig } from "@app/config/interfaces";
 import tval from "@app/utils/tval";
-
+// import { ISCConfig } from "@app/config/interfaces";
 
 export interface IValidatorReward {
   validator: Address;
@@ -36,7 +34,6 @@ const getValidatedContribution = (chainInfo: IChainInfo, abiName: EAbis, _id: nu
   try {
 
     // const cfg: ISCConfig = store.session((state) => (state.getSmartConfig()));
-
     const propsRes = useReadSmartProps(chainInfo.protocolName, abiName, {
       functionName: 'getValidatedContribution',
       args: [

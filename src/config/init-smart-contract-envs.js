@@ -8,11 +8,17 @@ const requiredKeys = [
   'contributorsAddress',
 ];
 
-export const initSmartContractEnvs = (protocol, network = 'testnet') => {
+const state = {
+  envs: {},
+  isInited: false,
+};
+
+const getEnvs = (protocol, network = 'testnet') => {
+  if (state.isInited)
+    return state.envs;
 
   protocol = protocol.toUpperCase();
   network = network.toUpperCase();
-
   const prefix = `VITE_API_${protocol}_${network}`;
 
   const envs = {
@@ -37,15 +43,22 @@ export const initSmartContractEnvs = (protocol, network = 'testnet') => {
     contributorsAddress: {
       address: import.meta.env[`${prefix}_CONTRIBUTORS_ADDRESS`],
     },
-    isInited: false,
+    isInited: true,
   };
 
   envs.isInited = !!requiredKeys.find((key) => (
     !!envs[key]?.address
   ));
 
-  return envs;
+  state.envs = envs;
+  state.isInited = envs.isInited;
+  return state.envs;
 
+}
+
+export const initSmartContractEnvs = (protocol, network = 'testnet') => {
+  const envs = getEnvs(protocol, network);
+  return envs;
 }
 
 

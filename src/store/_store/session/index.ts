@@ -2,7 +2,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { produce } from 'immer';
-import { ISession } from "@app/store/types/interfaces/session";
+import { IContributorsState, ISession } from "@app/store/types/interfaces/session";
 
 import { Address, EProtocol } from "@app/contracts";
 import { IChainInfo } from "@app/hooks/useSmart";
@@ -15,6 +15,10 @@ const initialState: ISession = {
   selectedContract: -1,
   selectedTargetCommuntyTokenContract: null,
   isSelectedTargetCommuntyTokenContractValid: false,
+  contributorsState: {
+    lastContributorId: 0,
+    subViewId: 0,
+  } as IContributorsState,
   smartConfig: {
     proxy: { address: '' as Address },
     accessControl: { address: '' as Address },
@@ -22,6 +26,7 @@ const initialState: ISession = {
     impl: { address: '' as Address },
     communityFactory: { address: '' as Address },
     communityAddress: { address: '' as Address },
+    contributorsAddress: { address: '' as Address },
     isInited: false,
   },
 };
@@ -33,6 +38,10 @@ const state: ISession = {
   selectedContract: -1,
   selectedTargetCommuntyTokenContract: null,
   isSelectedTargetCommuntyTokenContractValid: false,
+  contributorsState: {
+    lastContributorId: 0,
+    subViewId: 0,
+  } as IContributorsState,
   smartConfig: {
     proxy: { address: '' as Address },
     accessControl: { address: '' as Address },
@@ -40,6 +49,7 @@ const state: ISession = {
     impl: { address: '' as Address },
     communityFactory: { address: '' as Address },
     communityAddress: { address: '' as Address },
+    contributorsAddress: { address: '' as Address },
     isInited: false,
   },
 }
@@ -62,6 +72,9 @@ export interface ISessionState {
   setIsSelectedTargetCommuntyTokenContractValid: (value: boolean) => void;
   getIsSelectedTargetCommuntyTokenContractValid: () => boolean | null;
 
+  setContributorsState: (state: IContributorsState) => void;
+  getContributorsState: () => IContributorsState;
+
   reset: () => boolean;
 }
 
@@ -69,22 +82,16 @@ const store = create(
   persist<ISessionState>(
     (set, get) => ({
       _session: state,
-      set: (data: ISession) => {
-        set(produce((state) => {
-          state._session = data;
-        }));
-      },
       get: (): ISession => (get()._session),
-      setChainInfo: (chainInfo: IChainInfo) => {
+      set: (data: ISession) => {
         set(produce((state) => {
           state._session = {
             ...state._session,
-            chainId: chainInfo.chainId,
-            protocolName: chainInfo.protocolName,
-            isInited: true,
-          }
+            ...data,
+          };
         }));
       },
+
       getChainInfo: (): IChainInfo => {
         // return get()._session;
         const ses = get()._session;
@@ -95,6 +102,20 @@ const store = create(
         };
         return chainInfo;
       },
+      setChainInfo: (chainInfo: IChainInfo) => {
+        set(produce((state) => {
+          state._session = {
+            ...state._session,
+            chainId: chainInfo.chainId,
+            protocolName: chainInfo.protocolName,
+            isInited: true,
+          }
+        }));
+      },
+
+      getSelectedContract: (): number => {
+        return get()._session.selectedContract;
+      },
       setSelectedContract: (index: number) => {
         set(produce((state) => {
           state._session = {
@@ -103,8 +124,9 @@ const store = create(
           }
         }));
       },
-      getSelectedContract: (): number => {
-        return get()._session.selectedContract;
+
+      getSmartConfig: (): ISCConfig => {
+        return get()._session.smartConfig;
       },
       setSmartConfig: (smartConfig: ISCConfig) => {
         set(produce((state) => {
@@ -114,17 +136,7 @@ const store = create(
           }
         }));
       },
-      getSmartConfig: (): ISCConfig => {
-        return get()._session.smartConfig;
-      },
-      reset: () => {
-        set(produce((state) => {
-          state._session = {
-            ...initialState,
-          };
-        }));
-        return true;
-      },
+
       getTargetCommuntyTokenContract: (): Address | null => {
         return get()._session.selectedTargetCommuntyTokenContract;
       },
@@ -148,6 +160,31 @@ const store = create(
             isSelectedTargetCommuntyTokenContractValid,
           };
         }));
+      },
+
+      getContributorsState: (): IContributorsState => {
+        return get()._session.contributorsState;
+      },
+      setContributorsState: (contributorsState: IContributorsState): void => {
+        set(produce((state) => {
+          state._session = {
+            ...state._session,
+            contributorsState: {
+              ...state._session.contributorsState,
+              lastContributorId: contributorsState.lastContributorId,
+              subViewId: contributorsState.subViewId,
+            },
+          };
+        }));
+      },
+
+      reset: () => {
+        set(produce((state) => {
+          state._session = {
+            ...initialState,
+          };
+        }));
+        return true;
       },
 
     }),

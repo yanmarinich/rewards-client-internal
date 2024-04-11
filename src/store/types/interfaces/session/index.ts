@@ -5,6 +5,11 @@ import {
   // EAbis,
 } from "@app/hooks/useSmart";
 
+export interface IContributorsState {
+  lastContributorId: number;
+  subViewId: number;
+};
+
 export interface ISession {
   chainId: number;
   protocolName: EProtocol;
@@ -12,5 +17,6 @@ export interface ISession {
   selectedContract: number;
   selectedTargetCommuntyTokenContract: Address | null;
   isSelectedTargetCommuntyTokenContractValid: boolean;
+  contributorsState: IContributorsState,
   smartConfig: ISCConfig;
 }

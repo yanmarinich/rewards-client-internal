@@ -1,30 +1,12 @@
-import React, { FC, useRef, useState } from "react";
-import { useAccount, useWriteContract } from "wagmi";
-import { getChains } from '@wagmi/core'
-import { Chain } from "viem";
-
+import React, { FC, useState } from "react";
 import { ICommonProps } from "../../interfaces";
-import { Address, EAbis, useReadSmartProps } from "@app/hooks/useSmart";
-
-import crypto from "@app/utils/crypto";
-import * as Alert from "@app/utils/swal";
-import tval from "@app/utils/tval";
 import store from '@app/store';
-
 import AppRow from "@app/components/Layout/AppRow";
 import ContinueButton from "@app/components/Layout/ContinueButton";
 import Symbol from "@app/components/common/app/Symbol";
 
-import useSymbol from "@app/hooks/erc20/useSymbol";
-import useHasAdminRole from "@app/hooks/accessControl/useHasAdminRole";
-
-import wagmiConfig from "@app/providers/wagmi/config";
-import { EAccessControlRole, EAccessControlRoleName, ISmartContractParams } from "@app/contracts";
-import { getTxErrorMessage } from "@app/contracts/utils";
-import { accessControlRols, IAcccessControlRoles } from "@app/contracts/";
-import useRolesManager from "@app/hooks/proxy/getRoleMemberCount";
-import { InlineLoader } from "@app/components/common/app/InlineLoader";
-import getValidatedContribution from "@app/hooks/contributors/useGetValidatedContribution";
+import getValidatedContribution, { IValidatorReward } from "@app/hooks/contributors/useGetValidatedContribution";
+import { IContributorsState } from "@app/store/types/interfaces/session";
 
 const InfoRow: FC<{ field: string, value: any }> = ({ field, value }) => {
   return (
@@ -42,22 +24,20 @@ const ViewManager: FC<ICommonProps> = ({
   // onUpdateRequired
 }) => {
 
+  const contributorsState: IContributorsState = store.session((state) => (state.getContributorsState()));
+  const setContributorState = store.session((state) => (state.setContributorsState));
   const [selectedId, setSelectedId] = useState<number>(0);
-
-  const selectIdInputRef = useRef<HTMLInputElement>(null);
-
-  // const setLoader = store.system((state) => (state.setLoader));
-  // const { writeContractAsync, writeContract } = useWriteContract();
-  // const { address, isConnecting, isDisconnected } = useAccount();
-
-  // const chains = getChains(wagmiConfig);
-  // const mChain = chains.find((chain: Chain) => (chain.id === chainInfo.chainId));
-  // const blockExplorerUrl = mChain?.blockExplorers?.default?.url || "";
-  // const blockExplorerName = mChain?.blockExplorers?.default?.name || "";
 
   const {
     success, message, isPending: _isPending, data: result
-  } = getValidatedContribution(chainInfo, abiName, selectedId);
+  } = getValidatedContribution(chainInfo, abiName, contributorsState.lastContributorId);
+
+  const setLastContributorId = (id: number) => {
+    setContributorState({
+      ...contributorsState,
+      lastContributorId: id,
+    });
+  }
 
   return (
     <>
@@ -69,55 +49,74 @@ const ViewManager: FC<ICommonProps> = ({
       <AppRow withLine={true}>
         <div className="pd-10">
           {!success && (message || 'Failed to get information')}
-          {success && (<Symbol symbol={'ID'} value={selectedId} toFixed={0} />)}
+          {success && (<Symbol symbol={'ID'} value={contributorsState.lastContributorId} toFixed={0} />)}
+        </div>
+      </AppRow>
+
+      <AppRow withLine={true}>
+        <div className="pd-10">
+          <InfoRow field={'Validator-Address'} value={result?.validatorAddress} />
+          <InfoRow field={'Address-Chain'} value={result?.addressChain} />
+          <InfoRow field={'Token'} value={result?.token} />
+          {/* <InfoRow field={'Reward'} value={result?.reward} /> */}
+          <Symbol symbol={'Reward'} value={result?.reward} toFixed={6} />
+        </div>
+
+        <div className="pd-20">
+          <div>Metadata: </div>
+        </div>
+        <div className="pd-10" style={{ background: '#999', color: '#333' }}>
+          {result?.metadataIdentifier}
         </div>
 
       </AppRow>
 
       <AppRow withLine={true}>
-        <InfoRow field={'Contribution-ID'} value={result?.contributionId} />
-        <InfoRow field={'Validator-Address'} value={result?.validatorAddress} />
-        <InfoRow field={'Address-Chain'} value={result?.addressChain} />
-        <InfoRow field={'Token'} value={result?.token} />
-        <InfoRow field={'Reward'} value={result?.reward} />
-        <InfoRow field={'MetaData'} value={result?.metadataIdentifier} />
+        <div className="pd-10">
+          <div>Validator-Rewards: </div>
+        </div>
+        {result && result.validatorRewards
+          .map((reward: IValidatorReward, index: number) => {
+            return (
+              <div
+                key={`reward.validator-${reward.validator}`}
+                className="pd-20"
+              >
+                {reward.validator} -<Symbol symbol={'Reward'} value={reward.reward} toFixed={6} />
+              </div>
+            );
+          })
+        }
       </AppRow>
 
       <AppRow withLine={true}>
 
         <div className="input-main-wrapper">
-
-          <div className="pd-10">
-            Select ID:
-          </div>
-
+          <div className="pd-10"> Select ID: </div>
           <div className="pd-10">
             <input
               key={`set-id-input`}
               type="number"
               className="input-main"
               placeholder="Target ID of contributor"
-              defaultValue={selectedId}
-              ref={selectIdInputRef}
+              defaultValue={contributorsState.lastContributorId}
               min={0}
               step={1}
+              onChange={({ target }) => {
+                const id = (+target.value);
+                setSelectedId(id);
+              }}
             />
           </div>
-
           <div className="pd-20">
             <ContinueButton
               text="Set ID"
               onContinue={() => {
-                if (selectIdInputRef?.current?.value) {
-                  const id = ((+selectIdInputRef?.current?.value) || 0);
-                  setSelectedId(id);
-                }
+                setLastContributorId(selectedId);
               }}
             />
           </div>
-
         </div>
-
       </AppRow>
     </>
   )

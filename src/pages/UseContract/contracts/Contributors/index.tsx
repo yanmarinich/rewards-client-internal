@@ -7,15 +7,12 @@ import store from '@app/store';
 import { IChainInfo, IContractItem } from "@app/hooks/useSmart";
 import { useContractConfig } from "@app/hooks/useContractConfig";
 
-// import Balance from "./Balance";
-// import Allowance from "./Allowance";
-// import IncreaseAllowance from "./IncreaseAllowance";
-
 import { ICommonProps } from "../interfaces";
 import AppRow from "@app/components/Layout/AppRow";
 
 import ViewManager from "./ViewManager";
 import WriteManager from "./WriteManager";
+import { IContributorsState } from "@app/store/types/interfaces/session";
 
 
 const actions: React.FC<ICommonProps>[] = [
@@ -40,17 +37,23 @@ const RenderSubView: FC<ISubViewAppProps> = ({ chainInfo, abiName, contracts, su
 
 const Contributors: FC<IAppProps> = (props: IAppProps) => {
 
-  const [subViewId, setSubViewId] = useState<number>(0);
-
-  const [stateId, setStateId] = useState<number>(0);
   const chainInfo: IChainInfo = store.session((state) => (state.getChainInfo()));
   const selectedContract: number = store.session((state) => (state.getSelectedContract()));
+  const contributorsState: IContributorsState = store.session((state) => (state.getContributorsState()));
+  const setContributorState = store.session((state) => (state.setContributorsState));
+
+  const [stateId, setStateId] = useState<number>(0);
+
   const contracts: IContractItem[] = useContractConfig(chainInfo).contracts;
   const contract = contracts[selectedContract];
 
+  const onUpdateRequired = () => { setStateId(Date.now()); }
 
-  const onUpdateRequired = () => {
-    setStateId(Date.now());
+  const setSubViewId = (id: number) => {
+    setContributorState({
+      ...contributorsState,
+      subViewId: id
+    });
   }
 
   useEffect(() => {
@@ -64,13 +67,13 @@ const Contributors: FC<IAppProps> = (props: IAppProps) => {
 
       <AppRow withLine={false}>
         <button
-          className={`system-btn h-m-10 ${subViewId === 0 && 'system-btn-active'}`}
+          className={`system-btn h-m-10 ${contributorsState.subViewId === 0 && 'system-btn-active'}`}
           onClick={() => { setSubViewId(0) }}
         >
           View
         </button>
         <button
-          className={`system-btn h-m-10 ${subViewId === 1 && 'system-btn-active'}`}
+          className={`system-btn h-m-10 ${contributorsState.subViewId === 1 && 'system-btn-active'}`}
           onClick={() => { setSubViewId(1) }}
         >
           Manage
@@ -78,10 +81,11 @@ const Contributors: FC<IAppProps> = (props: IAppProps) => {
       </AppRow>
 
       <RenderSubView
-        subViewId={subViewId}
+        subViewId={contributorsState.subViewId}
         chainInfo={chainInfo}
         abiName={contract.abiName}
         contracts={contracts}
+        onUpdateRequired={onUpdateRequired}
       />
     </div>
   );
