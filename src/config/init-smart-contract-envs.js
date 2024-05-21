@@ -3,13 +3,22 @@ const requiredKeys = [
   'impl',
   'erc20',
   'accessControl',
+  'communityFactory',
+  'communityAddress',
+  'contributorsAddress',
 ];
 
-export const initSmartContractEnvs = (protocol, network = 'testnet') => {
+const state = {
+  envs: {},
+  isInited: false,
+};
+
+const getEnvs = (protocol, network = 'testnet') => {
+  if (state.isInited)
+    return state.envs;
 
   protocol = protocol.toUpperCase();
   network = network.toUpperCase();
-
   const prefix = `VITE_API_${protocol}_${network}`;
 
   const envs = {
@@ -25,15 +34,31 @@ export const initSmartContractEnvs = (protocol, network = 'testnet') => {
     accessControl: {
       address: import.meta.env[`${prefix}_ACCESS_CONTROL_ADDRESS`],
     },
-    isInited: false,
+    communityFactory: {
+      address: import.meta.env[`${prefix}_COMMUNITY_FACTORY`],
+    },
+    communityAddress: {
+      address: import.meta.env[`${prefix}_COMMUNITY_ADDRESS`],
+    },
+    contributorsAddress: {
+      address: import.meta.env[`${prefix}_CONTRIBUTORS_ADDRESS`],
+    },
+    isInited: true,
   };
 
   envs.isInited = !!requiredKeys.find((key) => (
     !!envs[key]?.address
   ));
 
-  return envs;
+  state.envs = envs;
+  state.isInited = envs.isInited;
+  return state.envs;
 
+}
+
+export const initSmartContractEnvs = (protocol, network = 'testnet') => {
+  const envs = getEnvs(protocol, network);
+  return envs;
 }
 
 

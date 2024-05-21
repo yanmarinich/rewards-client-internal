@@ -5,12 +5,13 @@ import "./index.scss";
 export interface ISymbol {
   symbol: string;
   value?: any
+  toFixed?: number;
 }
 
-const Symbol: FC<ISymbol> = ({ symbol, value }) => {
+const Symbol: FC<ISymbol> = ({ symbol, value, toFixed = 6 }) => {
 
   const showValue = typeof value === "number";
-  const amount = (+value).toFixed(6)
+  const amount = (+value).toFixed(toFixed);
 
   return (
     <div className="symbol-wrapper">

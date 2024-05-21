@@ -69,10 +69,10 @@ const IncreaseAllowance: FC<ICommonProps> = ({
     //   return Alert.toast.success('Aborting...');
 
     const amount = crypto.toWei(allowance, 18).toString()
-    const propsRes = getWriteSmartProps(chainInfo.protocolName, abiName, {
+    const propsRes = getWriteSmartProps(chainInfo.protocolName, EAbis.erc20, {
       functionName: 'approve',
       args: [
-        cfg.proxy.address,
+        cfg.communityAddress.address,
         amount,
       ],
     });
@@ -92,7 +92,7 @@ const IncreaseAllowance: FC<ICommonProps> = ({
         }
       }, (60 * 1000));
 
-      setLoader("Please approve transaction on your mobile wallet");
+      setLoader("Please approve transaction in your wallet");
 
       const params: any = propsRes.data as ISmartContractParams;
       const mTxHash = await writeContractAsync(params);

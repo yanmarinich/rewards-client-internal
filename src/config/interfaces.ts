@@ -14,6 +14,15 @@ export interface ISCConfig {
   accessControl: {
     address: Address,
   },
+  communityFactory: {
+    address: Address,
+  },
+  communityAddress: {
+    address: Address,
+  },
+  contributorsAddress: {
+    address: Address,
+  },
   isInited: boolean;
 }
 

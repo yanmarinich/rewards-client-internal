@@ -11,13 +11,14 @@ export interface IUseBalanceOfRes extends IBasicReadContractRes {
   balance: number;
 }
 
-const useBalanceOf = (chainInfo: IChainInfo, abiName: EAbis, address: Address): IUseBalanceOfRes => {
+const useBalanceOf = (chainInfo: IChainInfo, abiName: EAbis, address: Address, targetContract?: Address): IUseBalanceOfRes => {
 
   try {
 
     const propsRes = useReadSmartProps(chainInfo.protocolName, abiName, {
       functionName: 'balanceOf',
       args: [address as Address],
+      ...(targetContract ? { address: targetContract } : {}),
     });
 
     const isSysError = !propsRes.success;

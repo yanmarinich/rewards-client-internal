@@ -169,7 +169,7 @@ const RolesManager: FC<ICommonProps> = ({
         }
       }, (60 * 1000));
 
-      setLoader("Please approve transaction on your mobile wallet");
+      setLoader("Please approve transaction in your wallet");
 
       const params: any = propsRes.data as ISmartContractParams;
       writeContract(params);

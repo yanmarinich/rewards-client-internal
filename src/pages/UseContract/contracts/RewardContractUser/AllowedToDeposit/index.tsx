@@ -1,6 +1,7 @@
 import React, { FC, useRef } from "react";
 import { useAccount, useWriteContract } from "wagmi";
 import { getChains } from '@wagmi/core'
+import { Chain } from "viem";
 
 import "./index.scss"
 
@@ -24,7 +25,6 @@ import { InlineLoader } from "@app/components/common/app/InlineLoader";
 import ContinueButton from "@app/components/Layout/ContinueButton";
 import Symbol from "@app/components/common/app/Symbol";
 
-import { Chain } from "viem";
 
 const AllowedToDeposit: FC<ICommonProps> = ({
   chainInfo,

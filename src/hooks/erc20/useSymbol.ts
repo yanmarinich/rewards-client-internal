@@ -2,6 +2,7 @@
 import { useReadContract } from "wagmi";
 
 import {
+  Address,
   EAbis, IBasicReadContractRes,
   IChainInfo, useReadSmartProps,
 } from "./../useSmart";
@@ -9,12 +10,13 @@ export interface IUseSymbolRes extends IBasicReadContractRes {
   symbol: string;
 }
 
-const useSymbol = (chainInfo: IChainInfo, abiName: EAbis): IUseSymbolRes => {
+const useSymbol = (chainInfo: IChainInfo, abiName: EAbis, address?: Address | null): IUseSymbolRes => {
 
   try {
 
     const propsRes = useReadSmartProps(chainInfo.protocolName, abiName, {
       functionName: 'symbol',
+      address: address as Address,
     });
 
     const isSysError = !propsRes.success;

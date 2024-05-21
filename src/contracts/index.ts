@@ -3,6 +3,9 @@ import { Config } from 'wagmi'
 import proxy from "./abis/proxy.json";
 import erc20 from "./abis/ERC20.json";
 import accessControl from "./abis/accessControl.json";
+import communityFactory from "./abis/communityFactory.json";
+import communityAddress from "./abis/communityAddress.json";
+import contributorsAddress from "./abis/contributorsAddress.json";
 
 export type Address = `0x${string}`;
 export interface IAbi { [key: string]: any }
@@ -37,6 +40,9 @@ export enum EAbis {
   proxy = 'proxy',
   erc20 = 'erc20',
   accessControl = 'accessControl',
+  communityFactory = 'communityFactory',
+  communityAddress = 'communityAddress',
+  contributorsAddress = 'contributorsAddress',
 }
 
 export enum EProtocol {
@@ -69,6 +75,9 @@ export const abis = {
   [EAbis.proxy]: proxy,
   [EAbis.erc20]: erc20,
   [EAbis.accessControl]: accessControl,
+  [EAbis.communityFactory]: communityFactory,
+  [EAbis.communityAddress]: communityAddress,
+  [EAbis.contributorsAddress]: contributorsAddress,
 };
 
 export const getAbiByName = (abiName: EAbis): IAbi[] | undefined => {

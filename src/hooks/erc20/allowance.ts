@@ -13,7 +13,13 @@ export interface IUseAllowanceRes extends IBasicReadContractRes {
   allowance: number;
 }
 
-const useAllowance = (chainInfo: IChainInfo, abiName: EAbis, address: Address): IUseAllowanceRes => {
+const useAllowance = (
+  chainInfo: IChainInfo,
+  abiName: EAbis,
+  fromAddress: Address,
+  toAddress?: Address,
+  targetContractAddress?: Address
+): IUseAllowanceRes => {
 
   try {
 
@@ -21,9 +27,10 @@ const useAllowance = (chainInfo: IChainInfo, abiName: EAbis, address: Address): 
 
     const propsRes = useReadSmartProps(chainInfo.protocolName, abiName, {
       functionName: 'allowance',
+      ...(targetContractAddress ? { address: targetContractAddress } : {}),
       args: [
-        address as Address,
-        cfg.proxy.address,
+        fromAddress as Address,
+        toAddress || cfg.proxy.address,
       ],
     });
 

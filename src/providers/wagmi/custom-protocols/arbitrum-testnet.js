@@ -1,4 +1,5 @@
 import { defineChain } from 'viem'
+import config from "@app/config";
 
 const arbitrumTestnet = /*#__PURE__*/ defineChain({
   id: 421614,
@@ -11,9 +12,12 @@ const arbitrumTestnet = /*#__PURE__*/ defineChain({
   rpcUrls: {
     default: {
       http: [
+        config.blockchainRpcUrl,
+        // sometimes: hit request-limit  
         'https://public.stackup.sh/api/v1/node/arbitrum-sepolia',
-        // 'https://sepolia-rollup.arbitrum.io/rpc',
-        // 'https://arbitrum-sepolia.blockpi.network/v1/rpc/public ',
+        'https://arbitrum-sepolia.blockpi.network/v1/rpc/public ',
+        // sometimes error
+        'https://sepolia-rollup.arbitrum.io/rpc',
       ],
     },
   },
